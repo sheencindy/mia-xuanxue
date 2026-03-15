@@ -15,7 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
     <style>
-        /* --- 基础样式 (全局毛玻璃包裹) --- */
+        /* --- 视觉外壳 (全局毛玻璃包裹) --- */
         body {
             background-image: url('bg.jpg'); background-size: cover; background-position: center;
             background-attachment: fixed; margin: 0; display: flex; justify-content: center;
@@ -34,7 +34,7 @@
         .app-container::-webkit-scrollbar { width: 4px; }
         .app-container::-webkit-scrollbar-thumb { background: #2563EB; border-radius: 10px; }
 
-        /* --- 标题区域 --- */
+        /* --- Logo 与 标题区域 --- */
         .header-section { text-align: center; margin-bottom: 25px; }
         .logo-img {
             width: 120px; height: 120px; object-fit: cover; margin-bottom: 5px;
@@ -49,24 +49,27 @@
 
         /* --- 输入页 --- */
         .form-group { margin-bottom: 20px; }
-        label { display: block; color: #FCD34D; font-size: 14px; margin-bottom: 8px; }
+        label { display: block; color: #FCD34D; font-size: 14px; margin-bottom: 8px; font-weight: 500; }
+        label span.required { color: #2563EB; text-shadow: 0 0 5px rgba(37, 99, 235, 0.8); }
         .date-inputs { display: flex; gap: 8px; }
         select {
             flex: 1; padding: 12px; background: rgba(37, 99, 235, 0.15); border: 1px solid #2563EB;
             border-radius: 8px; color: #FDE68A; font-size: 14px; text-align: center; appearance: none; outline: none;
+            transition: border-color 0.3s;
         }
+        select:focus { border-color: #F59E0B; }
 
-        /* --- 按钮 (醒目金色渐变) --- */
+        /* --- 核心按钮 (金色渐变) --- */
         .submit-btn {
             width: 100%; padding: 16px; margin-top: 10px; border-radius: 10px; border: none;
             background: linear-gradient(135deg, #D97706, #b45309); color: #fff;
             font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4);
             transition: all 0.2s;
         }
-        .submit-btn:hover { background: linear-gradient(135deg, #F59E0B, #D97706); box-shadow: 0 0 20px rgba(217, 119, 6, 0.7); }
+        .submit-btn:hover { background: linear-gradient(135deg, #F59E0B, #D97706); }
         .submit-btn:active { transform: scale(0.98); }
 
-        /* 结果页并排按钮布局 */
+        /* 解码结果页并排按钮布局 (重新排布顺序) */
         .action-buttons {
             display: flex; gap: 12px; margin-top: 20px; margin-bottom: 10px;
         }
@@ -74,9 +77,10 @@
             margin: 0; padding: 14px 5px; font-size: 14px; flex: 1;
         }
 
-        /* --- 结果页 --- */
+        /* --- 解析结果界面 --- */
         #result-screen { display: none; }
         .res-header { text-align: center; border-bottom: 1px solid rgba(217, 119, 6, 0.3); padding-bottom: 15px; margin-bottom: 20px;}
+        .res-subtitle { color: #93C5FD; font-size: 12px; margin-bottom: 5px; letter-spacing: 1px;}
         .res-title { color: #D97706; font-size: 36px; font-weight: 900; margin: 0; text-shadow: 0 0 15px rgba(217, 119, 6, 0.6); }
         .res-tag { color: #FCD34D; font-size: 18px; margin-top: 5px; font-weight: bold; letter-spacing: 1px;}
 
@@ -103,20 +107,19 @@
             padding: 25px 20px; box-sizing: border-box;
         }
         
-        /* 核心修复：海报浮层底色，不使用毛玻璃，使用完全不透明、纯净且深邃的藏青色(#0a101e) */
+        /* 核心修复：海报浮层颜色。采用高浓度藏青色，屏蔽底层橘光，强制与首页色彩完美一致 */
         .poster-glass-card {
-            background-color: #0a101e; /* 纯净深邃藏青色，不发黄发橘 */
-            border-radius: 20px; /* 保持首页一样的圆角 */
-            padding: 30px 25px; box-sizing: border-box;
-            border: 1px solid rgba(217, 119, 6, 0.4); /* 金色边框 */
-            box-shadow: 0 0 30px rgba(37, 99, 235, 0.3); /* 阴影 */
+            background-color: rgba(10, 15, 30, 0.98); /* 极高浓度藏青色，不发黄发橘 */
+            border-radius: 20px; padding: 30px 25px; box-sizing: border-box;
+            border: 1px solid rgba(217, 119, 6, 0.4);
+            box-shadow: 0 0 30px rgba(37, 99, 235, 0.3), inset 0 0 10px rgba(217, 119, 6, 0.2);
         }
         
         /* 核心修复：海报专用 Logo 融合层，正圆形且带有金色外发光，呈现“全息投影悬浮”效果 */
         .poster-logo-container {
             width: 120px; height: 120px; margin: 0 auto;
             border-radius: 50%; /* 正圆形裁剪容器 */
-            box-shadow: 0 0 15px rgba(217, 119, 6, 0.6); /* 金色外发光，解决硬边贴片感 */
+            box-shadow: 0 0 15px rgba(217, 119, 6, 0.6); /* 金色外发光虚化边缘 */
             background: radial-gradient(circle at center, rgba(10, 16, 30, 0.8) 0%, rgba(10, 16, 30, 0) 70%); /* 金色渐变融合 */
             overflow: hidden; /* 强制内部图片裁切 */
         }
@@ -191,14 +194,14 @@
                 <div class="subtitle">数字化人生剧本解析系统</div>
             </div>
             <div class="form-group">
-                <label>出生日期 (公历) <span style="color:#2563EB; text-shadow: 0 0 5px rgba(37, 99, 235, 0.8);">*</span></label>
+                <label>出生日期 (公历) <span class="required">*</span></label>
                 <div class="date-inputs"><select id="year"></select><select id="month"></select><select id="day"></select></div>
             </div>
             <div class="form-group">
                 <label>出生时辰 (可选)</label>
                 <select id="birthTime"><option value="unknown">未知时辰 (跳过)</option><option value="zi">子时 (23:00-01:00)</option><option value="chou">丑时 (01:00-03:00)</option><option value="yin">寅时 (03:00-05:00)</option><option value="mao">卯时 (05:00-07:00)</option><option value="chen">辰时 (07:00-09:00)</option><option value="si">巳时 (09:00-11:00)</option><option value="wu">午时 (11:00-13:00)</option><option value="wei">未时 (13:00-15:00)</option><option value="shen">申时 (15:00-17:00)</option><option value="you">酉时 (17:00-19:00)</option><option value="xu">戌时 (19:00-21:00)</option><option value="hai">亥时 (21:00-23:00)</option></select>
             </div>
-            <button class="submit-btn" onclick="startDataParsing()">⚡ 注入算力 · 解码底层剧本</button>
+            <button class="submit-btn" onclick="startDataParsing()">⚡ 注入算力 · 解码我的底层剧本</button>
         </div>
 
         <div id="result-screen">
@@ -237,7 +240,7 @@
     </div>
 
     <script>
-        // 初始化日期选择器：下拉框现在可以正常选择年月日了！
+        // 初始化日期选择器：代码已修复，下拉框现在可以正常选择年月日了！
         const ys=document.getElementById('year'), ms=document.getElementById('month'), ds=document.getElementById('day');
         const cy=new Date().getFullYear();
         for(let i=cy;i>=1930;i--) ys.add(new Option(i+'年',i));
@@ -254,12 +257,12 @@
             { stem: "乙木", tag: "The Vine · 生态连接者", core: "蜿蜒生长的柔性网络，极其敏锐的节点感知力，能将孤立的数据编织成生态系统。", aura: "线条流畅细腻，气质柔和温婉；穿搭品味极佳，自带高级的文艺氛围场。", inner: "<ul><li><strong>高频共情：</strong>情绪读取能力满分，懂迁就、会照顾人。</li><li><strong>曲线救国：</strong>韧性极强，能屈能伸，用柔软的身段解决硬冲突。</li><li><strong>审美天赋：</strong>艺术感与细节捕捉能力天生在线。</li></ul>", roles: "古代/现代职场：才女谋士 / 社区生态总监、跨界公关<br>团队定位：超级粘合剂、创意氛围组<br>社交/恋爱：暖心知己 / 情绪价值提供机", celebs: "奥黛丽·赫本 (演艺)、胡歌 (演艺)、林徽因 (文化)" },
             { stem: "丙火", tag: "The Sun · 核心发光体", core: "系统中的恒星级能源，持续输出高燃热量，自带强大的辐射场与开源布道能力。", aura: "气色红润，笑容明亮；眼神有光，气场极致外放，走到哪都是聚光灯的中心。", inner: "<ul><li><strong>高燃输出：</strong>外向开朗，真诚直接，讨厌阴暗面。</li><li><strong>情绪感染：</strong>极强的煽动性与带动感，能瞬间点燃全场。</li><li><strong>慷慨开源：</strong>讲义气，乐于分享能量与资源。</li></ul>", roles: "古代/现代职场：盛世帝王 / 头部主播、明星演讲者<br>团队定位：破冰先锋、绝对气氛担当<br>社交/恋爱：聚会灵魂 / 浪漫直球型", celebs: "莱昂纳多(小李子) (演艺)、谢娜 (主持)、李白 (历史)" },
             { stem: "丁火", tag: "The Star · 灵感启明者", core: "黑夜中的高亮像素，数据盲区里的探照灯；能量不大但穿透力极强，专攻底层逻辑。", aura: "气质温柔有灵气，眼神深邃；自带柔光滤镜，舒服不刺眼，越看越有味道。", inner: "<ul><li><strong>深度洞察：</strong>情感细腻，能看透事物表象直击灵魂。</li><li><strong>极致专注：</strong>有自己独立运行的小世界，执着且持久。</li><li><strong>外柔内刚：</strong>看似温和，但底层有极其坚固的安全协议。</li></ul>", roles: "古代/现代职场：隐世谋士 / AI提示词工程师、深度调查记者<br>团队定位：灵感火花塞、走心分析师<br>社交/恋爱：温柔树洞 / 精神共振型", celebs: "泰勒·斯威夫特 (音乐)、周杰伦 (音乐)、貂蝉 (历史)" },
-            { stem: "戊土", tag: "The Mountain · 矩阵压舱石", core: "承载万亿参数的物理服务器集群，系统中最厚重、最可靠的防御与存储基石。", aura: "身形偏厚实稳重，面容端正；没有攻击性，但给人一种“这人能扛事”的绝对信任感。", inner: "<ul><li><strong>绝对稳健：</strong>诚信务实，不搞虚假数据，行动胜于雄辩.</li><li><strong>海量包容：</strong>宽容度极高，能承载巨大的压力与复杂情绪。</li><li><strong>长期主义：</strong>传统保守，追求终极的安全感与系统稳定。</li></ul>", roles: "古代/现代职场：镇国宰相 / 基础设施架构师、合规高管<br>团队定位：定海神针、最后一道防线<br>社交/恋爱：最靠谱后盾 / 踏实契约型", celebs: "沃伦·巴菲特 (投资)、董明珠 (商业)、安格拉·默克尔 (政治)" },
+            { stem: "戊土", tag: "The Mountain · 矩阵压舱石", core: "承载万亿参数的物理服务器集群，系统中最厚重、最可靠的防御与存储基石。", aura: "身形偏厚实稳重，面容端正；没有攻击性，但给人一种“这人能扛事”的绝对信任感。", inner: "<ul><li><strong>绝对稳健：</strong>诚信务实，行动胜于雄辩，讨厌虚假数据。</li><li><strong>海量包容：</strong>宽容度极高，能承载巨大的压力与复杂情绪。</li><li><strong>长期主义：</strong>传统保守，追求终极的安全感与系统稳定。</li></ul>", roles: "古代/现代职场：镇国宰相 / 基础设施架构师、合规高管<br>团队定位：定海神针、最后一道防线<br>社交/恋爱：最靠谱后盾 / 踏实契约型", celebs: "沃伦·巴菲特 (投资)、董明珠 (商业)、安格拉·默克尔 (政治)" },
             { stem: "己土", tag: "The Garden · 算法培育者", core: "拥有超级收纳能力与孵化环境的田园数据库；擅长整理冗杂信息，滋养初创项目。", aura: "温婉柔和，皮肤细腻；气质干净舒服，像微风一样没有压迫感，亲和力拉满。", inner: "<ul><li><strong>极致服务：</strong>细心体贴，擅长察觉并照顾系统的每一个微小进程。</li><li><strong>低调务实：</strong>不争抢算力，默默付出，在后台维持运转。</li><li><strong>高效整理：</strong>收纳整理、规划统筹能力一流。</li></ul>", roles: "古代/现代职场：悬壶医女 / 首席人力资源(CHRO)、用户运营<br>团队定位：后勤大总管、超级辅助与润滑剂<br>社交/恋爱：贴心大管家 / 无微不至型", celebs: "凯特王妃 (皇室)、黄磊 (演艺)、特蕾莎修女 (慈善)" },
             { stem: "庚金", tag: "The Sword · 破局终结者", core: "拥有最高执行权限的杀毒软件与改革指令；硬核、锋利，最擅长在混乱中重构秩序。", aura: "五官立体锋利，眼神犀利；气场冷冽高级，散发着一种“少惹我但很公正”的压迫感。", inner: "<ul><li><strong>极简杀伐：</strong>果断直接，讨厌拖泥带水，执行力拉满。</li><li><strong>非黑即白：</strong>极度讲求原则与逻辑，不畏强权，不讲人情。</li><li><strong>钢铁意志：</strong>抗压极强，属于“不破不立”的改革派。</li></ul>", roles: "古代/现代职场：铁血武将 / 危机公关、重构工程师<br>团队定位：核心战斗力、系统纠错者<br>社交/恋爱：敢说真话的诤友 / 直率硬核型", celebs: "克里斯蒂亚诺·罗纳尔多(C罗)、那英 (音乐)、关羽 (历史)" },
             { stem: "辛金", tag: "The Jade · 像素级雕琢者", core: "经过千万次迭代打磨的顶级UI界面；对精度、品质和美感有着近乎代码般苛刻的要求。", aura: "精致优雅，五官小巧；自带清冷的贵气与距离感，低调奢华，拒绝粗糙。", inner: "<ul><li><strong>完美主义：</strong>细节控晚期，对瑕疵零容忍。</li><li><strong>高阶审美：</strong>品味极佳，追求精神与物质的双重高级感。</li><li><strong>外冷内热：</strong>傲娇毒舌但心软，极其注重个人的体面与尊严。</li></ul>", roles: "古代/现代职场：绝代贵妃 / 奢侈品主理人、算法调优专家<br>团队定位：品质守门员、品味天花板<br>社交/恋爱：傲娇名媛(贵公子) / 精致浪漫型", celebs: "安妮·海瑟薇 (演艺)、梁朝伟 (演艺)、杨贵妃 (历史)" },
-            { stem: "壬水", tag: "The Ocean · 全局浪潮者", core: "席卷整个网络的巨大流量洪流与宏观算法；不受边界限制，善于驾驭海量数据与趋势。", aura: "气质洒脱大气，眼神深邃且灵动；自带一种见惯大风大浪的通透感与不羁。", inner: "<ul><li><strong>宏观演算：</strong>智慧通透，学习力强，永远站在全局视角看问题。</li><li><strong>动态适应：</strong>随机应变，豁达不拘小节，讨厌被规则死死绑住。</li><li><strong>冒险开拓：</strong>永远在追逐新的浪潮，偶尔显得喜新厌旧。</li></ul>", roles: "古代/现代职场：运筹帷幄的军师 / 风险投资人(VC)、Web3先行者<br><strong>团队定位：</strong>宏观战略家、脑洞发动机<br><strong>社交/恋爱：</strong>有趣的冒险家 / 自由流浪型", celebs: "理查德·布兰森 (商业)、高圆圆 (演艺)、诸葛亮 (历史)" },
-            { stem: "癸水", tag: "The Dew · 幽灵观察者", core: "悄无声息的隐形数据流，能够穿透任何防火墙，拥有系统内最强的情绪算力和直觉。", aura: "清冷干净，身形偏纤细；眼神清澈但极其内敛，给人一种安静、神秘且高级的感觉。", inner: "<ul><li><strong>情绪黑客：</strong>直觉力与敏感度惊人，能一眼看透人性和底层动机。</li><li><strong>柔性渗透：</strong>低调不张扬，外柔内刚，最擅长迂回包抄达成目的。</li><li><strong>深谋远虑：</strong>走一步算十步的幕后策略家。</li></ul>", roles: "古代/现代职场：幕后隐士 / 首席数据分析师、潜意识心理学家<br>团队定位：影子智囊团、信息处理中枢<br>社交/恋爱：终极树洞 / 温柔试探型", celebs: "基努·里维斯 (演艺)、刘亦菲 (演艺)、阿兰·图灵 (科技)" }
+            { stem: "壬水", tag: "The Ocean · 全局浪潮者", core: "席卷整个网络的巨大流量洪流与宏观算法；不受边界限制，善于驾驭海量数据与趋势。", aura: "气质洒脱大气，眼神深邃且灵动；自带一种见惯大风大浪的通透感与不羁。", inner: "<ul><li><strong>宏观演算：</strong>智慧通透，学习力强，永远站在全局视角看问题。</li><li><strong>动态适应：</strong>随机应变，豁达不拘小节，讨厌被规则死死绑住.</li><li><strong>冒险开拓：</strong>永远在追逐新的浪潮，偶尔显得喜新旧。</li></ul>", roles: "古代/现代职场：运筹帷幄的军师 / 风险投资人(VC)、Web3先行者<br>团队定位：宏观战略家、脑洞发动机<br>社交/恋爱：有趣的冒险家 / 自由流浪型", celebs: "理查德·布兰森 (商业)、高圆圆 (演艺)、诸葛亮 (历史)" },
+            { stem: "癸水", tag: "The Dew · 幽灵观察者", core: "悄无声息的隐形数据流，能够穿透任何防火墙，拥有系统内最强的情绪算力和直觉。", aura: "清冷干净，身形偏纤细；眼神清澈但极其内敛，给人一种安静、神秘且高级的感觉。", inner: "<ul><li><strong>情绪黑客：</strong>直觉力与敏感度惊人，能一眼看透人性和底层动机。</li><li><strong>柔性渗透：</strong>低调不张扬，外柔内刚，最擅长迂回包抄达成目的。</li><li><strong>深谋远虑：</strong>走一步算十步的幕后策略家。</li></ul>", roles: "古代/现代职场：幕后隐士 / 首席数据分析师、潜意识心理学家<br>团队定位：影子智囊团、信息处理中枢<br>社交/恋爱：终极樹洞 / 温柔试探型", celebs: "刘亦菲 (演艺)、基努·里维斯 (演艺)、阿兰·图灵 (科技)" }
         ];
 
         function startDataParsing() {
@@ -282,13 +285,13 @@
             document.getElementById('res-roles').innerHTML = result.roles;
             document.getElementById('res-celebs').innerText = result.celebs;
 
-            // 注入海报模板数据：除名人外，注入四大核心模块，内核算法使用剔除 MBTI 后的列表内容
+            // 注入海报模板数据：除名人外，注入四大核心模块，保持文案和格式完全一致
             document.getElementById('post-name').innerText = result.stem;
             document.getElementById('post-tag').innerText = result.tag;
             document.getElementById('post-core').innerText = result.core;
             document.getElementById('post-aura').innerText = result.aura;
-            document.getElementById('post-inner').innerHTML = result.inner; // 直接传入带 strong 和 项目符号的内容
-            document.getElementById('post-roles').innerHTML = result.roles; // 直接传入带 HTML 标签的内容保持换行和加粗
+            document.getElementById('post-inner').innerHTML = result.inner; // 直接传入带 HTML 标签的内容保持格式
+            document.getElementById('post-roles').innerHTML = result.roles; // 直接传入带 HTML 标签的内容保持格式
             
             // 回顶部
             document.getElementById('mainContainer').scrollTop = 0;
@@ -308,7 +311,7 @@
                 const canvas = await html2canvas(template, {
                     useCORS: true,
                     scale: 3, 
-                    backgroundColor: '#0a0f1e' // 配合bg.jpg的深色底边，彻底解决截图插件不支持毛玻璃导致的黄色光晕问题
+                    backgroundColor: '#0a0f1e' // 配合bg.jpg的深色底边，解决截图插件不支持毛玻璃导致的黄色光晕问题
                 });
                 document.getElementById('poster-img').src = canvas.toDataURL("image/png");
                 document.getElementById('poster-overlay').style.display = 'flex';
