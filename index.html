@@ -4,22 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mia妙言 - 玄学实验室</title>
-    <meta name="description" content="Mia妙言：赛博玄学实验室。用数学、逻辑与代码，深度解析你的十维能量原型与人生底层剧本。">
-    
+
+    <meta name="description" content="Mia妙言：赛博玄学实验室。用数学、逻辑与代码，深度解析你的十维能量原型。">
     <meta property="og:title" content="Mia妙言 | 你的底层代码解析器">
-    <meta property="og:description" content="输入坐标，启动算力。立刻解码你的核心能量原型与赛博人生剧本。">
+    <meta property="og:description" content="输入坐标，启动算力。立刻解码你的核心能量原型。">
     <meta property="og:image" content="https://www.mia-xuanxue.fun/bg.jpg">
     <meta property="og:url" content="https://www.mia-xuanxue.fun/">
     <meta property="og:type" content="website">
-    
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Mia妙言 | 你的底层代码解析器">
-    <meta name="twitter:description" content="用科技拆解玄学，解码你的核心能量原型。">
-    <meta name="twitter:image" content="https://www.mia-xuanxue.fun/bg.jpg">
 
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
-
-    
     <style>
         /* --- 视觉外壳 --- */
         body {
@@ -53,95 +47,82 @@
             scroll-behavior: smooth;
         }
 
-        .app-container::-webkit-scrollbar { width: 6px; }
-        .app-container::-webkit-scrollbar-track { background: rgba(10, 15, 30, 0.5); border-radius: 10px; }
+        /* 隐藏滚动条但保留功能 */
+        .app-container::-webkit-scrollbar { width: 4px; }
         .app-container::-webkit-scrollbar-thumb { background: #2563EB; border-radius: 10px; }
-        .app-container::-webkit-scrollbar-thumb:hover { background: #D97706; }
 
         /* --- Logo 与 标题 --- */
         .header-section { text-align: center; margin-bottom: 25px; }
         .logo-img {
             width: 140px; height: 140px; object-fit: cover; margin-bottom: 5px; 
-            border: none; background-color: transparent; box-shadow: none;
             filter: drop-shadow(0 0 15px rgba(217, 119, 6, 0.6));
             -webkit-mask-image: radial-gradient(circle at center, black 45%, transparent 70%);
             mask-image: radial-gradient(circle at center, black 45%, transparent 70%);
         }
-        .title { color: #D97706; font-size: 20px; margin: 0 0 2px 0; font-weight: 600; letter-spacing: 2px; opacity: 0.9; }
-        .lab-title { color: #F59E0B; font-size: 34px; margin: 0 0 8px 0; font-weight: 900; letter-spacing: 4px; text-shadow: 0 0 20px rgba(217, 119, 6, 0.6); }
-        .subtitle { color: #93C5FD; font-size: 13px; letter-spacing: 1px; opacity: 0.8; }
+        .title { color: #D97706; font-size: 20px; margin: 0; font-weight: 600; letter-spacing: 2px; opacity: 0.9; }
+        .lab-title { color: #F59E0B; font-size: 34px; margin: 5px 0; font-weight: 900; letter-spacing: 4px; text-shadow: 0 0 20px rgba(217, 119, 6, 0.6); }
+        .subtitle { color: #93C5FD; font-size: 13px; opacity: 0.8; }
 
-        /* --- 表单控件 --- */
+        /* --- 输入页样式 --- */
         .form-group { margin-bottom: 24px; }
-        label { display: block; color: #FCD34D; font-size: 14px; margin-bottom: 8px; font-weight: 500; }
-        label span.required { color: #2563EB; text-shadow: 0 0 5px rgba(37, 99, 235, 0.8); }
+        label { display: block; color: #FCD34D; font-size: 14px; margin-bottom: 8px; }
         .date-inputs { display: flex; gap: 10px; }
         select {
             width: 100%; padding: 14px 10px; background-color: rgba(37, 99, 235, 0.15); 
-            border: 1px solid #2563EB; border-radius: 10px; color: #FDE68A; font-size: 15px; 
-            box-sizing: border-box; outline: none; transition: all 0.3s ease; appearance: none; 
-            cursor: pointer; text-align: center;
+            border: 1px solid #2563EB; border-radius: 10px; color: #FDE68A; font-size: 15px; appearance: none; text-align: center;
         }
-        select:focus { border-color: #D97706; box-shadow: 0 0 12px rgba(217, 119, 6, 0.3); background-color: rgba(217, 119, 6, 0.05); }
-        option { background-color: #0f172a; color: #FDE68A; }
 
-        /* --- 核心按钮 --- */
+        /* --- 按钮设计 --- */
         .submit-btn {
             width: 100%; padding: 15px 16px; margin-top: 10px; background: linear-gradient(135deg, #D97706, #b45309);
-            color: #ffffff; border: 1px solid #F59E0B; border-radius: 10px; font-size: 16px; font-weight: bold; 
-            letter-spacing: 1px; cursor: pointer; transition: transform 0.1s, box-shadow 0.3s; box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4);
+            color: #ffffff; border: 1px solid #F59E0B; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer;
         }
-        .submit-btn:hover { box-shadow: 0 0 20px rgba(217, 119, 6, 0.7); background: linear-gradient(135deg, #F59E0B, #D97706); }
-        .submit-btn:active { transform: scale(0.98); }
+        .share-btn {
+            background: linear-gradient(135deg, #2563EB, #1d4ed8);
+            border-color: #60A5FA;
+            margin-bottom: 15px;
+        }
 
-        /* --- 解析结果界面 --- */
+        /* --- 结果页样式 --- */
         #result-screen { display: none; text-align: left; animation: fadeIn 0.8s ease forwards; }
-        
         .res-header { text-align: center; margin-bottom: 20px; border-bottom: 1px solid rgba(37, 99, 235, 0.4); padding-bottom: 20px; }
-        
-        /* 核心修复：添加了 object-fit: cover 彻底解决八卦图变形问题 */
-        .res-logo { 
-            width: 70px; 
-            height: 70px; 
-            object-fit: cover; 
-            margin-bottom: 10px; 
-            filter: drop-shadow(0 0 10px rgba(217, 119, 6, 0.6)); 
-            -webkit-mask-image: radial-gradient(circle at center, black 45%, transparent 70%); 
-            mask-image: radial-gradient(circle at center, black 45%, transparent 70%);
-        }
-        
-        .res-subtitle { color: #93C5FD; font-size: 13px; letter-spacing: 1px; margin-bottom: 5px; }
-        .res-title { color: #D97706; font-size: 32px; font-weight: 900; margin: 0; text-shadow: 0 0 15px rgba(217, 119, 6, 0.6); }
-        .res-tag { color: #FCD34D; font-size: 18px; font-weight: bold; margin-top: 5px; letter-spacing: 2px;}
+        .res-logo { width: 70px; height: 70px; object-fit: cover; filter: drop-shadow(0 0 10px rgba(217, 119, 6, 0.6)); -webkit-mask-image: radial-gradient(circle at center, black 45%, transparent 70%); }
+        .res-title { color: #D97706; font-size: 32px; font-weight: 900; margin: 10px 0 0 0; }
+        .res-tag { color: #FCD34D; font-size: 18px; font-weight: bold; }
 
         .data-card {
             background-color: rgba(15, 23, 42, 0.6); border: 1px solid rgba(37, 99, 235, 0.3); border-radius: 12px;
-            padding: 16px; margin-bottom: 16px; box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5); transition: border-color 0.3s;
+            padding: 16px; margin-bottom: 16px;
         }
-        .data-card:hover { border-color: rgba(217, 119, 6, 0.5); }
-        .card-title { color: #F59E0B; font-size: 15px; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .card-title { color: #F59E0B; font-size: 14px; font-weight: bold; margin-bottom: 8px; }
         .card-content { color: #DBEAFE; font-size: 14px; line-height: 1.6; }
-        .card-content ul { margin: 0; padding-left: 20px; color: #93C5FD; }
-        .card-content li { margin-bottom: 6px; }
-        .card-content strong { color: #FCD34D; }
+        .card-content ul { margin: 0; padding-left: 18px; color: #93C5FD; }
         .highlight-text { color: #60A5FA; font-weight: 500; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 加载状态指示器 */
+        #loading-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; color: #FCD34D;
+        }
     </style>
 </head>
 <body>
 
+    <div id="loading-overlay">正在生成你的能量图鉴...</div>
+
     <div class="app-container" id="mainContainer">
         <div id="input-screen">
             <div class="header-section">
-                <img src="logo.jpg" alt="Mia Logo" class="logo-img" onerror="this.style.display='none'">
+                <img src="logo.jpg" class="logo-img" onerror="this.style.display='none'">
                 <div class="title">Mia妙言</div>
                 <h1 class="lab-title">玄学实验室</h1>
                 <div class="subtitle">数字化人生剧本解析系统</div>
             </div>
 
             <div class="form-group">
-                <label>出生日期 (公历) <span class="required">*</span></label>
+                <label>出生日期 (公历)</label>
                 <div class="date-inputs">
                     <select id="year"></select>
                     <select id="month"></select>
@@ -172,43 +153,37 @@
         </div>
 
         <div id="result-screen">
-            <div class="res-header">
-                <img src="logo.jpg" alt="Mia Logo" class="res-logo" onerror="this.style.display='none'">
-                <div class="res-subtitle">—— 你的底层能量原型是 ——</div>
-                <div class="res-title" id="res-name">甲木</div>
-                <div class="res-tag" id="res-tag">The Oak · 创世架构师</div>
+            <div id="capture-area" style="padding: 10px; border-radius: 15px;">
+                <div class="res-header">
+                    <img src="logo.jpg" class="res-logo" onerror="this.style.display='none'">
+                    <div class="res-subtitle">—— 你的底层能量原型是 ——</div>
+                    <div class="res-title" id="res-name">-</div>
+                    <div class="res-tag" id="res-tag">-</div>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-title">💻 底层代码</div>
+                    <div class="card-content highlight-text" id="res-core">-</div>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-title">⚙️ 内核算法</div>
+                    <div class="card-content" id="res-inner">-</div>
+                </div>
+
+                <div class="data-card">
+                    <div class="card-title">🌟 能量共振样本</div>
+                    <div class="card-content" id="res-celebs">-</div>
+                </div>
             </div>
 
-            <div class="data-card">
-                <div class="card-title">💻 底层代码 (Core Code)</div>
-                <div class="card-content highlight-text" id="res-core">加载中...</div>
-            </div>
-
-            <div class="data-card">
-                <div class="card-title">🔮 外在全息投影 (Aura)</div>
-                <div class="card-content" id="res-aura">加载中...</div>
-            </div>
-
-            <div class="data-card">
-                <div class="card-title">⚙️ 内核算法 (Inner Logic)</div>
-                <div class="card-content" id="res-inner">加载中...</div>
-            </div>
-
-            <div class="data-card">
-                <div class="card-title">🎭 多元宇宙角色 (Multiverse Roles)</div>
-                <div class="card-content" id="res-roles">加载中...</div>
-            </div>
-
-            <div class="data-card" style="margin-bottom: 25px;">
-                <div class="card-title">🌟 能量共振样本 (Resonance)</div>
-                <div class="card-content" id="res-celebs">加载中...</div>
-            </div>
-
-            <button class="submit-btn" onclick="returnToInput()" style="background:transparent; border:1px solid #2563EB; color:#93C5FD; box-shadow:none; margin-bottom: 20px;">↺ 重新调整参数解码</button>
+            <button class="submit-btn share-btn" onclick="generatePoster()">📸 保存结果海报 (朋友圈)</button>
+            <button class="submit-btn" onclick="returnToInput()" style="background:transparent; border:1px solid #2563EB; color:#93C5FD; box-shadow:none; margin-bottom: 20px;">↺ 重新输入参数</button>
         </div>
     </div>
 
     <script>
+        // 初始化日期选择
         const yearSelect = document.getElementById('year');
         const monthSelect = document.getElementById('month');
         const daySelect = document.getElementById('day');
@@ -219,31 +194,27 @@
         yearSelect.value = "1995"; monthSelect.value = "6"; daySelect.value = "15";
 
         const archetypes = [
-            { stem: "甲木", tag: "The Oak · 创世架构师", core: "破土而出的第一行代码，自带向上生长的破局之力与绝对的系统主导权。", aura: "骨架舒展，身形挺拔；眼神坚定，走路带风。出场自带“主角光环”与正气感。", inner: "<ul><li><strong>目标锁定：</strong>野心与担当并存，认准方向就不回头。</li><li><strong>直筒逻辑：</strong>正直坦荡，宁折不弯，拒绝无效的弯弯绕绕。</li><li><strong>抗压满格：</strong>压力越大，生长的势能越强。(MBTI镜像: ENTJ)</li></ul>", roles: "<strong>古代/现代职场：</strong>开国君主 / 独角兽CEO、行业标准制定者<br><strong>团队定位：</strong>决策引擎、方向指引者<br><strong>社交/恋爱：</strong>靠谱大哥(大姐) / 强势守护型", celebs: "埃隆·马斯克 (科技)、刘涛 (演艺)、岳飞 (历史)" },
-            { stem: "乙木", tag: "The Vine · 生态连接者", core: "蜿蜒生长的柔性网络，极其敏锐的节点感知力，能将孤立的数据编织成生态系统。", aura: "线条流畅细腻，气质柔和温婉；穿搭品味极佳，自带高级的文艺氛围场。", inner: "<ul><li><strong>高频共情：</strong>情绪读取能力满分，懂迁就、会照顾人。</li><li><strong>曲线救国：</strong>韧性极强，能屈能伸，用柔软的身段解决硬冲突。</li><li><strong>审美天赋：</strong>艺术感与细节捕捉能力天生在线。(MBTI: ENFJ/INFP)</li></ul>", roles: "<strong>古代/现代职场：</strong>才女谋士 / 社区生态总监、跨界公关<br><strong>团队定位：</strong>超级粘合剂、创意氛围组<br><strong>社交/恋爱：</strong>暖心知己 / 情绪价值提供机", celebs: "奥黛丽·赫本 (演艺)、胡歌 (演艺)、林徽因 (文化)" },
-            { stem: "丙火", tag: "The Sun · 核心发光体", core: "系统中的恒星级能源，持续输出高燃热量，自带强大的辐射场与开源布道能力。", aura: "气色红润，笑容明亮；眼神有光，气场极致外放，走到哪都是聚光灯的中心。", inner: "<ul><li><strong>高燃输出：</strong>外向开朗，真诚直接，讨厌阴暗面。</li><li><strong>情绪感染：</strong>极强的煽动性与带动感，能瞬间点燃全场。</li><li><strong>慷慨开源：</strong>讲义气，乐于分享能量与资源。(MBTI: ENFP/ESFP)</li></ul>", roles: "<strong>古代/现代职场：</strong>盛世帝王 / 头部主播、明星演讲者<br><strong>团队定位：</strong>破冰先锋、绝对气氛担当<br><strong>社交/恋爱：</strong>聚会灵魂 / 浪漫直球型", celebs: "莱昂纳多(小李子) (演艺)、谢娜 (主持)、李白 (历史)" },
-            { stem: "丁火", tag: "The Star · 灵感启明者", core: "黑夜中的高亮像素，数据盲区里的探照灯；能量不大但穿透力极强，专攻底层逻辑。", aura: "气质温柔有灵气，眼神深邃；自带柔光滤镜，舒服不刺眼，越看越有味道。", inner: "<ul><li><strong>深度洞察：</strong>情感细腻，能看透事物表象直击灵魂。</li><li><strong>极致专注：</strong>有自己独立运行的小世界，执着且持久。</li><li><strong>外柔内刚：</strong>看似温和，但底层有极其坚固的安全协议。(MBTI: INFJ/INTJ)</li></ul>", roles: "<strong>古代/现代职场：</strong>隐世谋士 / AI提示词工程师、深度调查记者<br><strong>团队定位：</strong>灵感火花塞、走心分析师<br><strong>社交/恋爱：</strong>温柔树洞 / 精神共振型", celebs: "泰勒·斯威夫特 (音乐)、周杰伦 (音乐)、貂蝉 (历史)" },
-            { stem: "戊土", tag: "The Mountain · 矩阵压舱石", core: "承载万亿参数的物理服务器集群，系统中最厚重、最可靠的防御与存储基石。", aura: "身形偏厚实稳重，面容端正；没有攻击性，但给人一种“这人能扛事”的绝对信任感。", inner: "<ul><li><strong>绝对稳健：</strong>诚信务实，不搞虚假数据，行动胜于雄辩。</li><li><strong>海量包容：</strong>宽容度极高，能承载巨大的压力与复杂情绪。</li><li><strong>长期主义：</strong>传统保守，追求终极的安全感与系统稳定。(MBTI: ISTJ/ISFJ)</li></ul>", roles: "<strong>古代/现代职场：</strong>镇国宰相 / 基础设施架构师、合规高管<br><strong>团队定位：</strong>定海神针、最后一道防线<br><strong>社交/恋爱：</strong>最靠谱后盾 / 踏实契约型", celebs: "沃伦·巴菲特 (投资)、董明珠 (商业)、安格拉·默克尔 (政治)" },
-            { stem: "己土", tag: "The Garden · 算法培育者", core: "拥有超级收纳能力与孵化环境的田园数据库；擅长整理冗杂信息，滋养初创项目。", aura: "温婉柔和，皮肤细腻；气质干净舒服，像微风一样没有压迫感，亲和力拉满。", inner: "<ul><li><strong>极致服务：</strong>细心体贴，擅长察觉并照顾系统的每一个微小进程。</li><li><strong>低调务实：</strong>不争抢算力，默默付出，在后台维持运转。</li><li><strong>高效整理：</strong>收纳整理、规划统筹能力一流。(MBTI: ISFJ/ESFJ)</li></ul>", roles: "<strong>古代/现代职场：</strong>悬壶医女 / 首席人力资源(CHRO)、用户运营<br><strong>团队定位：</strong>后勤大总管、超级辅助与润滑剂<br><strong>社交/恋爱：</strong>贴心大管家 / 无微不至型", celebs: "凯特王妃 (皇室)、黄磊 (演艺)、特蕾莎修女 (慈善)" },
-            { stem: "庚金", tag: "The Sword · 破局终结者", core: "拥有最高执行权限的杀毒软件与改革指令；硬核、锋利，最擅长在混乱中重构秩序。", aura: "五官立体锋利，眼神犀利；气场冷冽高级，散发着一种“少惹我但很公正”的压迫感。", inner: "<ul><li><strong>极简杀伐：</strong>果断直接，讨厌拖泥带水，执行力拉满。</li><li><strong>非黑即白：</strong>极度讲求原则与逻辑，不畏强权，不讲人情。</li><li><strong>钢铁意志：</strong>抗压极强，属于“不破不立”的改革派。(MBTI: ESTJ/ISTP)</li></ul>", roles: "<strong>古代/现代职场：</strong>铁血武将 / 危机公关、重构工程师<br><strong>团队定位：</strong>核心战斗力、系统纠错者<br><strong>社交/恋爱：</strong>敢说真话的诤友 / 直率硬核型", celebs: "克里斯蒂亚诺·罗纳尔多(C罗)、那英 (音乐)、关羽 (历史)" },
-            { stem: "辛金", tag: "The Jade · 像素级雕琢者", core: "经过千万次迭代打磨的顶级UI界面；对精度、品质和美感有着近乎代码般苛刻的要求。", aura: "精致优雅，五官小巧；自带清冷的贵气与距离感，低调奢华，拒绝粗糙。", inner: "<ul><li><strong>完美主义：</strong>细节控晚期，对瑕疵零容忍。</li><li><strong>高阶审美：</strong>品味极佳，追求精神与物质的双重高级感。</li><li><strong>外冷内热：</strong>傲娇毒舌但心软，极其注重个人的体面与尊严。(MBTI: ESTP/ESFP偏J)</li></ul>", roles: "<strong>古代/现代职场：</strong>绝代贵妃 / 奢侈品主理人、算法调优专家<br><strong>团队定位：</strong>品质守门员、品味天花板<br><strong>社交/恋爱：</strong>傲娇名媛(贵公子) / 精致浪漫型", celebs: "安妮·海瑟薇 (演艺)、梁朝伟 (演艺)、杨贵妃 (历史)" },
-            { stem: "壬水", tag: "The Ocean · 全局浪潮者", core: "席卷整个网络的巨大流量洪流与宏观算法；不受边界限制，善于驾驭海量数据与趋势。", aura: "气质洒脱大气，眼神深邃且灵动；自带一种见惯大风大浪的通透感与不羁。", inner: "<ul><li><strong>宏观演算：</strong>智慧通透，学习力强，永远站在全局视角看问题。</li><li><strong>动态适应：</strong>随机应变，豁达不拘小节，讨厌被规则死死绑住。</li><li><strong>冒险开拓：</strong>永远在追逐新的浪潮，偶尔显得喜新厌旧。(MBTI: ENTP/ESTP)</li></ul>", roles: "<strong>古代/现代职场：</strong>运筹帷幄的军师 / 风险投资人(VC)、Web3先行者<br><strong>团队定位：</strong>宏观战略家、脑洞发动机<br><strong>社交/恋爱：</strong>有趣的冒险家 / 自由流浪型", celebs: "理查德·布兰森 (商业)、高圆圆 (演艺)、诸葛亮 (历史)" },
-            { stem: "癸水", tag: "The Dew · 幽灵观察者", core: "悄无声息的隐形数据流，能够穿透任何防火墙，拥有系统内最强的情绪算力和直觉。", aura: "清冷干净，身形偏纤细；眼神清澈但极其内敛，给人一种安静、神秘且高级的感觉。", inner: "<ul><li><strong>情绪黑客：</strong>直觉力与敏感度惊人，能一眼看透人性和底层动机。</li><li><strong>柔性渗透：</strong>低调不张扬，外柔内刚，最擅长迂回包抄达成目的。</li><li><strong>深谋远虑：</strong>走一步算十步的幕后策略家。(MBTI: INTP/INFJ)</li></ul>", roles: "<strong>古代/现代职场：</strong>幕后隐士 / 首席数据分析师、潜意识心理学家<br><strong>团队定位：</strong>影子智囊团、信息处理中枢<br><strong>社交/恋爱：</strong>终极树洞 / 温柔试探型", celebs: "基努·里维斯 (演艺)、刘亦菲 (演艺)、阿兰·图灵 (科技)" }
+            { stem: "甲木", tag: "The Oak · 创世架构师", core: "破土而出的第一行代码，自带向上生长的破局之力与绝对的系统主导权。", inner: "<ul><li>目标锁定：野心与担当并存</li><li>直筒逻辑：正直坦荡，宁折不弯</li><li>抗压满格：越压越强 (ENTJ)</li></ul>", celebs: "埃隆·马斯克、刘涛、岳飞" },
+            { stem: "乙木", tag: "The Vine · 生态连接者", core: "蜿蜒生长的柔性网络，能将孤立的数据编织成生态系统。", inner: "<ul><li>高频共情：情绪读取能力满分</li><li>曲线救国：韧性极强，能屈能伸</li><li>审美天赋：艺术感天生在线 (ENFJ)</li></ul>", celebs: "奥黛丽·赫本、胡歌、林徽因" },
+            { stem: "丙火", tag: "The Sun · 核心发光体", core: "系统中的恒星级能源，持续输出高燃热量，自带强大的辐射场。", inner: "<ul><li>高燃输出：外向开朗，真诚直接</li><li>情绪感染：瞬间点燃全场的气氛</li><li>慷慨开源：讲义气，乐于分享 (ENFP)</li></ul>", celebs: "莱昂纳多、谢娜、李白" },
+            { stem: "丁火", tag: "The Star · 灵感启明者", core: "黑夜中的高亮像素，数据盲区里的探照灯；专攻底层逻辑。", inner: "<ul><li>深度洞察：看透事物表象直击灵魂</li><li>极致专注：有自己运行的小世界</li><li>外柔内刚：底层有坚固协议 (INFJ)</li></ul>", celebs: "泰勒·斯威夫特、周杰伦、貂蝉" },
+            { stem: "戊土", tag: "The Mountain · 矩阵压舱石", core: "承载万亿参数的物理服务器集群，最厚重、最可靠的防御基石。", inner: "<ul><li>绝对稳健：诚信务实，行动胜于雄辩</li><li>海量包容：承载巨大压力与复杂情绪</li><li>长期主义：追求终极的系统稳定 (ISTJ)</li></ul>", celebs: "沃伦·巴菲特、董明珠、曾国藩" },
+            { stem: "己土", tag: "The Garden · 算法培育者", core: "拥有超级收纳能力的田园数据库；擅长整理冗杂信息，滋养项目。", inner: "<ul><li>极致服务：细心体贴，照顾微小进程</li><li>低调务实：不争抢算力，默默付出</li><li>高效整理：统筹规划能力一流 (ISFJ)</li></ul>", celebs: "凯特王妃、黄磊、特蕾莎修女" },
+            { stem: "庚金", tag: "The Sword · 破局终结者", core: "拥有最高执行权限的杀毒软件与改革指令；最擅长在混乱中重构秩序。", inner: "<ul><li>极简杀伐：果断直接，执行力拉满</li><li>非黑即白：极度讲求原则与逻辑</li><li>钢铁意志：不畏强权，不破不立 (ESTJ)</li></ul>", celebs: "C罗、那英、关羽" },
+            { stem: "辛金", tag: "The Jade · 像素级雕琢者", core: "经过千万次迭代打磨的顶级UI界面；对精度和美感有苛刻要求。", inner: "<ul><li>完美主义：细节控晚期，零容忍</li><li>高阶审美：品味极佳，追求高级感</li><li>外冷内热：傲娇毒舌但心软 (ESFP)</li></ul>", celebs: "安妮·海瑟薇、梁朝伟、杨贵妃" },
+            { stem: "壬水", tag: "The Ocean · 全局浪潮者", core: "席卷网络的流量洪流与宏大算法；善于驾驭海量数据与趋势。", inner: "<ul><li>宏观演算：智慧通透，永远全局视角</li><li>动态适应：随机应变，豁达不拘</li><li>冒险开拓：永远站在浪尖 (ENTP)</li></ul>", celebs: "理查德·布兰森、高圆圆、诸葛亮" },
+            { stem: "癸水", tag: "The Dew · 幽灵观察者", core: "隐形数据流，能够穿透防火墙，拥有系统内最强的情绪算力。", inner: "<ul><li>情绪黑客：直觉力惊人，看穿人心</li><li>柔性渗透：低调不张扬，以柔克刚</li><li>深谋远虑：走一步算十步 (INTP)</li></ul>", celebs: "基努·里维斯、刘亦菲、阿兰·图灵" }
         ];
 
         function startDataParsing() {
             const y = parseInt(yearSelect.value);
             const m = parseInt(monthSelect.value);
             const d = parseInt(daySelect.value);
-
             const targetDate = new Date(y, m - 1, d);
             const baseDate = new Date(2024, 0, 1); 
-            const diffTime = targetDate - baseDate;
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            
+            const diffDays = Math.floor((targetDate - baseDate) / (1000 * 60 * 60 * 24));
             let stemIndex = diffDays % 10;
             if (stemIndex < 0) stemIndex += 10; 
-
             const result = archetypes[stemIndex];
 
             document.getElementById('input-screen').style.display = 'none';
@@ -252,12 +223,36 @@
             document.getElementById('res-name').innerText = result.stem;
             document.getElementById('res-tag').innerText = result.tag;
             document.getElementById('res-core').innerText = result.core;
-            document.getElementById('res-aura').innerText = result.aura;
             document.getElementById('res-inner').innerHTML = result.inner; 
-            document.getElementById('res-roles').innerHTML = result.roles; 
             document.getElementById('res-celebs').innerText = result.celebs;
-
             document.getElementById('mainContainer').scrollTop = 0;
+        }
+
+        // 📸 核心功能：生成海报并下载
+        function generatePoster() {
+            const overlay = document.getElementById('loading-overlay');
+            overlay.style.display = 'flex'; // 显示加载中
+
+            const captureArea = document.getElementById('capture-area');
+            
+            // 使用 html2canvas 截图
+            html2canvas(captureArea, {
+                useCORS: true, // 允许跨域图片
+                backgroundColor: '#1a1c23', // 海报背景色
+                scale: 2, // 提高清晰度
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.download = `Mia妙言_能量图鉴_${new Date().getTime()}.png`;
+                link.href = imgData;
+                link.click();
+                overlay.style.display = 'none'; // 隐藏加载中
+                alert('海报生成成功！请在下载管理中查看并分享至朋友圈。');
+            }).catch(err => {
+                console.error('海报生成失败:', err);
+                overlay.style.display = 'none';
+                alert('海报生成失败，请稍后再试。');
+            });
         }
 
         function returnToInput() {
