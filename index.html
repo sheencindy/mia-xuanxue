@@ -2,222 +2,197 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mia妙言 - 玄学实验室</title>
-    <meta name="description" content="Mia妙言：赛博玄学实验室。用数学、逻辑与代码，深度解析你的十维能量原型与人生底层剧本。">
-    
+
     <meta property="og:title" content="Mia妙言 | 你的底层代码解析器">
-    <meta property="og:description" content="输入坐标，启动算力。立刻解码你的核心能量原型与赛博人生剧本。">
+    <meta property="og:description" content="用科技拆解玄学，解码你的核心能量原型。">
     <meta property="og:image" content="https://www.mia-xuanxue.fun/bg.jpg">
-    <meta property="og:url" content="https://www.mia-xuanxue.fun/">
-    <meta property="og:type" content="website">
-    
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Mia妙言 | 你的底层代码解析器">
-    <meta name="twitter:description" content="用科技拆解玄学，解码你的核心能量原型。">
-    <meta name="twitter:image" content="https://www.mia-xuanxue.fun/bg.jpg">
 
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
-
-    
     <style>
-        /* --- 视觉外壳 --- */
+        /* --- 基础样式 --- */
         body {
-            background-image: url('bg.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
-            color: #fff;
+            background-image: url('bg.jpg'); background-size: cover; background-position: center;
+            background-attachment: fixed; margin: 0; display: flex; justify-content: center;
+            align-items: center; min-height: 100vh; color: #fff;
+            font-family: -apple-system, sans-serif;
         }
 
         .app-container {
-            background-color: rgba(10, 15, 30, 0.75); 
-            backdrop-filter: blur(12px); 
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 30px 25px; 
-            width: 100%;
-            max-width: 400px;
-            max-height: 90vh; 
-            overflow-y: auto; 
-            box-shadow: 0 0 30px rgba(37, 99, 235, 0.3), inset 0 0 10px rgba(217, 119, 6, 0.2);
-            border: 1px solid rgba(217, 119, 6, 0.4); 
-            box-sizing: border-box;
-            position: relative;
+            background-color: rgba(10, 15, 30, 0.8); backdrop-filter: blur(15px);
+            border-radius: 20px; padding: 30px 20px; width: 90%; max-width: 400px;
+            max-height: 85vh; overflow-y: auto; border: 1px solid rgba(217, 119, 6, 0.4);
+            box-shadow: 0 0 30px rgba(37, 99, 235, 0.3); position: relative;
             scroll-behavior: smooth;
         }
 
-        .app-container::-webkit-scrollbar { width: 6px; }
-        .app-container::-webkit-scrollbar-track { background: rgba(10, 15, 30, 0.5); border-radius: 10px; }
+        .app-container::-webkit-scrollbar { width: 4px; }
         .app-container::-webkit-scrollbar-thumb { background: #2563EB; border-radius: 10px; }
-        .app-container::-webkit-scrollbar-thumb:hover { background: #D97706; }
 
-        /* --- Logo 与 标题 --- */
+        /* --- 标题区域 --- */
         .header-section { text-align: center; margin-bottom: 25px; }
         .logo-img {
-            width: 140px; height: 140px; object-fit: cover; margin-bottom: 5px; 
-            border: none; background-color: transparent; box-shadow: none;
+            width: 120px; height: 120px; object-fit: cover; margin-bottom: 5px;
             filter: drop-shadow(0 0 15px rgba(217, 119, 6, 0.6));
             -webkit-mask-image: radial-gradient(circle at center, black 45%, transparent 70%);
-            mask-image: radial-gradient(circle at center, black 45%, transparent 70%);
         }
-        .title { color: #D97706; font-size: 20px; margin: 0 0 2px 0; font-weight: 600; letter-spacing: 2px; opacity: 0.9; }
-        .lab-title { color: #F59E0B; font-size: 34px; margin: 0 0 8px 0; font-weight: 900; letter-spacing: 4px; text-shadow: 0 0 20px rgba(217, 119, 6, 0.6); }
-        .subtitle { color: #93C5FD; font-size: 13px; letter-spacing: 1px; opacity: 0.8; }
+        .title { color: #D97706; font-size: 16px; letter-spacing: 2px; margin: 0; font-weight: 600; }
+        .lab-title { color: #F59E0B; font-size: 32px; font-weight: 900; letter-spacing: 4px; margin: 5px 0; text-shadow: 0 0 20px rgba(217, 119, 6, 0.6); }
+        .subtitle { color: #93C5FD; font-size: 13px; opacity: 0.8; text-align: center;}
 
-        /* --- 表单控件 --- */
-        .form-group { margin-bottom: 24px; }
-        label { display: block; color: #FCD34D; font-size: 14px; margin-bottom: 8px; font-weight: 500; }
-        label span.required { color: #2563EB; text-shadow: 0 0 5px rgba(37, 99, 235, 0.8); }
-        .date-inputs { display: flex; gap: 10px; }
+        /* --- 输入页 --- */
+        .form-group { margin-bottom: 20px; }
+        label { display: block; color: #FCD34D; font-size: 14px; margin-bottom: 8px; }
+        .date-inputs { display: flex; gap: 8px; }
         select {
-            width: 100%; padding: 14px 10px; background-color: rgba(37, 99, 235, 0.15); 
-            border: 1px solid #2563EB; border-radius: 10px; color: #FDE68A; font-size: 15px; 
-            box-sizing: border-box; outline: none; transition: all 0.3s ease; appearance: none; 
-            cursor: pointer; text-align: center;
+            flex: 1; padding: 12px; background: rgba(37, 99, 235, 0.15); border: 1px solid #2563EB;
+            border-radius: 8px; color: #FDE68A; font-size: 14px; text-align: center; appearance: none;
         }
-        select:focus { border-color: #D97706; box-shadow: 0 0 12px rgba(217, 119, 6, 0.3); background-color: rgba(217, 119, 6, 0.05); }
-        option { background-color: #0f172a; color: #FDE68A; }
 
-        /* --- 核心按钮 --- */
+        /* --- 按钮 (醒目金色渐变) --- */
         .submit-btn {
-            width: 100%; padding: 15px 16px; margin-top: 10px; background: linear-gradient(135deg, #D97706, #b45309);
-            color: #ffffff; border: 1px solid #F59E0B; border-radius: 10px; font-size: 16px; font-weight: bold; 
-            letter-spacing: 1px; cursor: pointer; transition: transform 0.1s, box-shadow 0.3s; box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4);
+            width: 100%; padding: 16px; margin-top: 10px; border-radius: 10px; border: none;
+            background: linear-gradient(135deg, #D97706, #b45309); color: #fff;
+            font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4);
+            transition: all 0.2s;
         }
-        .submit-btn:hover { box-shadow: 0 0 20px rgba(217, 119, 6, 0.7); background: linear-gradient(135deg, #F59E0B, #D97706); }
+        .submit-btn:hover { background: linear-gradient(135deg, #F59E0B, #D97706); box-shadow: 0 0 20px rgba(217, 119, 6, 0.7); }
         .submit-btn:active { transform: scale(0.98); }
 
-        /* --- 解析结果界面 --- */
-        #result-screen { display: none; text-align: left; animation: fadeIn 0.8s ease forwards; }
-        
-        .res-header { text-align: center; margin-bottom: 20px; border-bottom: 1px solid rgba(37, 99, 235, 0.4); padding-bottom: 20px; }
-        
-        /* 核心修复：添加了 object-fit: cover 彻底解决八卦图变形问题 */
-        .res-logo { 
-            width: 70px; 
-            height: 70px; 
-            object-fit: cover; 
-            margin-bottom: 10px; 
-            filter: drop-shadow(0 0 10px rgba(217, 119, 6, 0.6)); 
-            -webkit-mask-image: radial-gradient(circle at center, black 45%, transparent 70%); 
-            mask-image: radial-gradient(circle at center, black 45%, transparent 70%);
-        }
-        
-        .res-subtitle { color: #93C5FD; font-size: 13px; letter-spacing: 1px; margin-bottom: 5px; }
-        .res-title { color: #D97706; font-size: 32px; font-weight: 900; margin: 0; text-shadow: 0 0 15px rgba(217, 119, 6, 0.6); }
-        .res-tag { color: #FCD34D; font-size: 18px; font-weight: bold; margin-top: 5px; letter-spacing: 2px;}
+        /* --- 结果页 --- */
+        #result-screen { display: none; }
+        .res-header { text-align: center; border-bottom: 1px solid rgba(217, 119, 6, 0.3); padding-bottom: 15px; margin-bottom: 20px;}
+        .res-title { color: #D97706; font-size: 36px; font-weight: 900; margin: 0; text-shadow: 0 0 15px rgba(217, 119, 6, 0.6); }
+        .res-tag { color: #FCD34D; font-size: 18px; margin-top: 5px; font-weight: bold; letter-spacing: 1px;}
 
-        .data-card {
-            background-color: rgba(15, 23, 42, 0.6); border: 1px solid rgba(37, 99, 235, 0.3); border-radius: 12px;
-            padding: 16px; margin-bottom: 16px; box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5); transition: border-color 0.3s;
-        }
-        .data-card:hover { border-color: rgba(217, 119, 6, 0.5); }
-        .card-title { color: #F59E0B; font-size: 15px; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-        .card-content { color: #DBEAFE; font-size: 14px; line-height: 1.6; }
+        .data-card { background: rgba(15, 23, 42, 0.6); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid rgba(37, 99, 235, 0.3); box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5); }
+        .card-title { color: #F59E0B; font-size: 15px; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;}
+        .card-content { font-size: 14px; line-height: 1.6; color: #DBEAFE; }
         .card-content ul { margin: 0; padding-left: 20px; color: #93C5FD; }
         .card-content li { margin-bottom: 6px; }
         .card-content strong { color: #FCD34D; }
         .highlight-text { color: #60A5FA; font-weight: 500; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- 海报预览/生成层 --- */
+        #poster-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 2000; flex-direction: column; justify-content: center; align-items: center;
+        }
+        #poster-img { width: 85%; border-radius: 10px; box-shadow: 0 0 30px #000; }
+        .close-poster { color: #fff; margin-top: 20px; padding: 10px 20px; border: 1px solid #fff; border-radius: 5px; }
+
+        /* 隐藏的真实海报模板 (16:9 适合手机分享) */
+        #poster-template {
+            position: absolute; left: -9999px; width: 375px; background: #0a0f1e url('bg.jpg');
+            background-size: cover; padding: 40px 30px; box-sizing: border-box;
+        }
+        .poster-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 30px; border-top: 1px solid rgba(217,119,6,0.3); padding-top: 20px; }
+        .qr-code { width: 80px; height: 80px; background: white; padding: 5px; border-radius: 5px; }
     </style>
 </head>
 <body>
 
+    <div id="loading-overlay" style="display:none; position:fixed; z-index:3000; color:#FCD34D; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); justify-content:center; align-items:center;">正在启动全息渲染...</div>
+
+    <div id="poster-overlay">
+        <p style="color:#FCD34D; margin-bottom:10px;">长按图片保存，分享给好友</p>
+        <img id="poster-img" src="">
+        <div class="close-poster" onclick="closePoster()">返回实验室</div>
+    </div>
+
+    <div id="poster-template">
+        <div style="text-align:center;">
+            <img src="logo.jpg" style="width:80px; height:80px; border-radius:50%; border:2px solid #D97706; object-fit: cover;">
+            <div style="color:#D97706; font-size:18px; margin-top:10px; font-weight: bold;">Mia妙言 · 玄学实验室</div>
+        </div>
+        <div style="margin-top:40px; text-align:center;">
+            <div style="color:#93C5FD; font-size:14px; letter-spacing:2px;">—— 核心能量原型 ——</div>
+            <div id="post-name" style="color:#D97706; font-size:48px; font-weight:900; margin:10px 0;">-</div>
+            <div id="post-tag" style="color:#FCD34D; font-size:18px; font-weight:bold;">-</div>
+        </div>
+        <div style="margin-top:30px; background:rgba(255,255,255,0.05); padding:20px; border-radius:10px; font-size:14px; line-height:1.6; color:#DBEAFE; border: 1px solid rgba(37, 99, 235, 0.3);">
+            <div style="color:#F59E0B; font-weight:bold; margin-bottom:8px;">💻 底层代码</div>
+            <div id="post-core" style="margin-bottom:15px; color:#60A5FA;">-</div>
+            <div style="color:#F59E0B; font-weight:bold; margin-bottom:8px;">⚙️ 核心算法</div>
+            <div id="post-inner">-</div>
+        </div>
+        <div class="poster-footer">
+            <div style="color:#FDE68A; font-size:12px;">
+                <p style="margin:0;">💡 解码你的专属赛博人生剧本</p>
+                <p style="margin:5px 0 0 0; opacity:0.7;">www.mia-xuanxue.fun</p>
+            </div>
+            <div id="qrcode" class="qr-code"></div>
+        </div>
+    </div>
+
     <div class="app-container" id="mainContainer">
         <div id="input-screen">
             <div class="header-section">
-                <img src="logo.jpg" alt="Mia Logo" class="logo-img" onerror="this.style.display='none'">
-                <div class="title">Mia妙言</div>
+                <img src="logo.jpg" class="logo-img" onerror="this.style.display='none'">
+                <div class="title">MIA 妙言</div>
                 <h1 class="lab-title">玄学实验室</h1>
                 <div class="subtitle">数字化人生剧本解析系统</div>
             </div>
-
             <div class="form-group">
-                <label>出生日期 (公历) <span class="required">*</span></label>
-                <div class="date-inputs">
-                    <select id="year"></select>
-                    <select id="month"></select>
-                    <select id="day"></select>
-                </div>
+                <label>公历出生日期 <span style="color:#2563EB;">*</span></label>
+                <div class="date-inputs"><select id="year"></select><select id="month"></select><select id="day"></select></div>
             </div>
-
             <div class="form-group">
                 <label>出生时辰 (可选)</label>
-                <select id="birthTime">
-                    <option value="unknown">未知时辰 (跳过)</option>
-                    <option value="zi">子时 (23:00-00:59)</option>
-                    <option value="chou">丑时 (01:00-02:59)</option>
-                    <option value="yin">寅时 (03:00-04:59)</option>
-                    <option value="mao">卯时 (05:00-06:59)</option>
-                    <option value="chen">辰时 (07:00-08:59)</option>
-                    <option value="si">巳时 (09:00-10:59)</option>
-                    <option value="wu">午时 (11:00-12:59)</option>
-                    <option value="wei">未时 (13:00-14:59)</option>
-                    <option value="shen">申时 (15:00-16:59)</option>
-                    <option value="you">酉时 (17:00-18:59)</option>
-                    <option value="xu">戌时 (19:00-20:59)</option>
-                    <option value="hai">亥时 (21:00-22:59)</option>
-                </select>
+                <select id="birthTime"><option value="unknown">未知时辰 (跳过)</option><option value="zi">子时 (23:00-01:00)</option><option value="chou">丑时 (01:00-03:00)</option><option value="yin">寅时 (03:00-05:00)</option><option value="mao">卯时 (05:00-07:00)</option><option value="chen">辰时 (07:00-09:00)</option><option value="si">巳时 (09:00-11:00)</option><option value="wu">午时 (11:00-13:00)</option><option value="wei">未时 (13:00-15:00)</option><option value="shen">申时 (15:00-17:00)</option><option value="you">酉时 (17:00-19:00)</option><option value="xu">戌时 (19:00-21:00)</option><option value="hai">亥时 (21:00-23:00)</option></select>
             </div>
-
             <button class="submit-btn" onclick="startDataParsing()">⚡ 注入算力 · 解码我的底层剧本</button>
         </div>
 
         <div id="result-screen">
             <div class="res-header">
-                <img src="logo.jpg" alt="Mia Logo" class="res-logo" onerror="this.style.display='none'">
-                <div class="res-subtitle">—— 你的底层能量原型是 ——</div>
-                <div class="res-title" id="res-name">甲木</div>
-                <div class="res-tag" id="res-tag">The Oak · 创世架构师</div>
+                <div class="res-subtitle" style="color:#93C5FD; font-size:12px; margin-bottom:5px;">—— 你的底层能量原型是 ——</div>
+                <div class="res-title" id="res-name">-</div>
+                <div class="res-tag" id="res-tag">-</div>
             </div>
-
+            
             <div class="data-card">
                 <div class="card-title">💻 底层代码 (Core Code)</div>
                 <div class="card-content highlight-text" id="res-core">加载中...</div>
             </div>
-
             <div class="data-card">
                 <div class="card-title">🔮 外在全息投影 (Aura)</div>
                 <div class="card-content" id="res-aura">加载中...</div>
             </div>
-
             <div class="data-card">
                 <div class="card-title">⚙️ 内核算法 (Inner Logic)</div>
                 <div class="card-content" id="res-inner">加载中...</div>
             </div>
-
             <div class="data-card">
                 <div class="card-title">🎭 多元宇宙角色 (Multiverse Roles)</div>
                 <div class="card-content" id="res-roles">加载中...</div>
             </div>
-
             <div class="data-card" style="margin-bottom: 25px;">
                 <div class="card-title">🌟 能量共振样本 (Resonance)</div>
                 <div class="card-content" id="res-celebs">加载中...</div>
             </div>
 
-            <button class="submit-btn" onclick="returnToInput()" style="background:transparent; border:1px solid #2563EB; color:#93C5FD; box-shadow:none; margin-bottom: 20px;">↺ 重新调整参数解码</button>
+            <button class="submit-btn" onclick="generatePoster()" style="margin-bottom: 15px;">📸 生成我的能量图鉴 (分享海报)</button>
+            <button class="submit-btn" onclick="returnToInput()" style="margin-bottom: 10px;">↺ 重新解码</button>
         </div>
     </div>
 
     <script>
-        const yearSelect = document.getElementById('year');
-        const monthSelect = document.getElementById('month');
-        const daySelect = document.getElementById('day');
-        const currentYear = new Date().getFullYear();
-        for (let y = currentYear; y >= 1930; y--) { yearSelect.add(new Option(y + '年', y)); }
-        for (let m = 1; m <= 12; m++) { monthSelect.add(new Option(m + '月', m)); }
-        for (let d = 1; d <= 31; d++) { daySelect.add(new Option(d + '日', d)); }
-        yearSelect.value = "1995"; monthSelect.value = "6"; daySelect.value = "15";
+        // 初始化日期
+        const ys=document.getElementById('year'), ms=document.getElementById('month'), ds=document.getElementById('day');
+        const cy=new Date().getFullYear();
+        for(let i=cy;i>=1930;i--) ys.add(new Option(i+'年',i));
+        for(let i=1;i<=12;i++) ms.add(new Option(i+'月',i));
+        for(let i=1;i<=31;i++) ds.add(new Option(i+'日',i));
+        ys.value=1995; ms.value=6; ds.value=15;
 
+        // 初始化海报中的二维码
+        new QRCode(document.getElementById("qrcode"), { text: "https://www.mia-xuanxue.fun", width: 80, height: 80, colorDark : "#000000", colorLight : "#ffffff" });
+
+        // 数据字典：完整恢复赛博玄学深度版！
         const archetypes = [
             { stem: "甲木", tag: "The Oak · 创世架构师", core: "破土而出的第一行代码，自带向上生长的破局之力与绝对的系统主导权。", aura: "骨架舒展，身形挺拔；眼神坚定，走路带风。出场自带“主角光环”与正气感。", inner: "<ul><li><strong>目标锁定：</strong>野心与担当并存，认准方向就不回头。</li><li><strong>直筒逻辑：</strong>正直坦荡，宁折不弯，拒绝无效的弯弯绕绕。</li><li><strong>抗压满格：</strong>压力越大，生长的势能越强。(MBTI镜像: ENTJ)</li></ul>", roles: "<strong>古代/现代职场：</strong>开国君主 / 独角兽CEO、行业标准制定者<br><strong>团队定位：</strong>决策引擎、方向指引者<br><strong>社交/恋爱：</strong>靠谱大哥(大姐) / 强势守护型", celebs: "埃隆·马斯克 (科技)、刘涛 (演艺)、岳飞 (历史)" },
             { stem: "乙木", tag: "The Vine · 生态连接者", core: "蜿蜒生长的柔性网络，极其敏锐的节点感知力，能将孤立的数据编织成生态系统。", aura: "线条流畅细腻，气质柔和温婉；穿搭品味极佳，自带高级的文艺氛围场。", inner: "<ul><li><strong>高频共情：</strong>情绪读取能力满分，懂迁就、会照顾人。</li><li><strong>曲线救国：</strong>韧性极强，能屈能伸，用柔软的身段解决硬冲突。</li><li><strong>审美天赋：</strong>艺术感与细节捕捉能力天生在线。(MBTI: ENFJ/INFP)</li></ul>", roles: "<strong>古代/现代职场：</strong>才女谋士 / 社区生态总监、跨界公关<br><strong>团队定位：</strong>超级粘合剂、创意氛围组<br><strong>社交/恋爱：</strong>暖心知己 / 情绪价值提供机", celebs: "奥黛丽·赫本 (演艺)、胡歌 (演艺)、林徽因 (文化)" },
@@ -232,31 +207,35 @@
         ];
 
         function startDataParsing() {
-            const y = parseInt(yearSelect.value);
-            const m = parseInt(monthSelect.value);
-            const d = parseInt(daySelect.value);
-
+            const y = parseInt(ys.value); const m = parseInt(ms.value); const d = parseInt(ds.value);
             const targetDate = new Date(y, m - 1, d);
             const baseDate = new Date(2024, 0, 1); 
-            const diffTime = targetDate - baseDate;
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            
-            let stemIndex = diffDays % 10;
-            if (stemIndex < 0) stemIndex += 10; 
+            const diffDays = Math.floor((targetDate - baseDate) / 86400000);
+            let idx = diffDays % 10; if(idx < 0) idx += 10;
+            const result = archetypes[idx];
 
-            const result = archetypes[stemIndex];
+            // 切换页面
+            document.getElementById('input-screen').style.display='none';
+            document.getElementById('result-screen').style.display='block';
 
-            document.getElementById('input-screen').style.display = 'none';
-            document.getElementById('result-screen').style.display = 'block';
-
+            // 注入 UI 面板数据
             document.getElementById('res-name').innerText = result.stem;
             document.getElementById('res-tag').innerText = result.tag;
             document.getElementById('res-core').innerText = result.core;
             document.getElementById('res-aura').innerText = result.aura;
-            document.getElementById('res-inner').innerHTML = result.inner; 
-            document.getElementById('res-roles').innerHTML = result.roles; 
+            document.getElementById('res-inner').innerHTML = result.inner;
+            document.getElementById('res-roles').innerHTML = result.roles;
             document.getElementById('res-celebs').innerText = result.celebs;
 
+            // 注入 海报模板 数据
+            document.getElementById('post-name').innerText = result.stem;
+            document.getElementById('post-tag').innerText = result.tag;
+            document.getElementById('post-core').innerText = result.core;
+            // 清理 HTML 标签以纯文本形式放入海报
+            const cleanInner = result.inner.replace(/<ul>|<li>|<\/li>|<strong>|<\/strong>/g, '').replace(/<\/ul>/g, '');
+            document.getElementById('post-inner').innerText = cleanInner;
+            
+            // 回顶部
             document.getElementById('mainContainer').scrollTop = 0;
         }
 
@@ -265,6 +244,26 @@
             document.getElementById('input-screen').style.display = 'block';
             document.getElementById('mainContainer').scrollTop = 0;
         }
+
+        async function generatePoster() {
+            document.getElementById('loading-overlay').style.display='flex';
+            const template = document.getElementById('poster-template');
+            
+            try {
+                const canvas = await html2canvas(template, {
+                    useCORS: true,
+                    scale: 3, 
+                    backgroundColor: '#0a0f1e'
+                });
+                document.getElementById('poster-img').src = canvas.toDataURL("image/png");
+                document.getElementById('poster-overlay').style.display = 'flex';
+            } catch (e) {
+                alert("渲染失败，请刷新重试");
+            }
+            document.getElementById('loading-overlay').style.display='none';
+        }
+
+        function closePoster() { document.getElementById('poster-overlay').style.display='none'; }
     </script>
 </body>
 </html>
