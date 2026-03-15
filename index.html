@@ -34,7 +34,6 @@
             border: 1px solid rgba(217, 119, 6, 0.4); 
             box-sizing: border-box;
             position: relative;
-            /* 平滑滚动体验 */
             scroll-behavior: smooth;
         }
 
@@ -83,7 +82,18 @@
         #result-screen { display: none; text-align: left; animation: fadeIn 0.8s ease forwards; }
         
         .res-header { text-align: center; margin-bottom: 20px; border-bottom: 1px solid rgba(37, 99, 235, 0.4); padding-bottom: 20px; }
-        .res-logo { width: 70px; height: 70px; margin-bottom: 10px; filter: drop-shadow(0 0 10px rgba(217, 119, 6, 0.6)); -webkit-mask-image: radial-gradient(circle at center, black 45%, transparent 70%); }
+        
+        /* 核心修复：添加了 object-fit: cover 彻底解决八卦图变形问题 */
+        .res-logo { 
+            width: 70px; 
+            height: 70px; 
+            object-fit: cover; 
+            margin-bottom: 10px; 
+            filter: drop-shadow(0 0 10px rgba(217, 119, 6, 0.6)); 
+            -webkit-mask-image: radial-gradient(circle at center, black 45%, transparent 70%); 
+            mask-image: radial-gradient(circle at center, black 45%, transparent 70%);
+        }
+        
         .res-subtitle { color: #93C5FD; font-size: 13px; letter-spacing: 1px; margin-bottom: 5px; }
         .res-title { color: #D97706; font-size: 32px; font-weight: 900; margin: 0; text-shadow: 0 0 15px rgba(217, 119, 6, 0.6); }
         .res-tag { color: #FCD34D; font-size: 18px; font-weight: bold; margin-top: 5px; letter-spacing: 2px;}
@@ -220,11 +230,9 @@
 
             const result = archetypes[stemIndex];
 
-            // 切换到结果页
             document.getElementById('input-screen').style.display = 'none';
             document.getElementById('result-screen').style.display = 'block';
 
-            // 注入数据
             document.getElementById('res-name').innerText = result.stem;
             document.getElementById('res-tag').innerText = result.tag;
             document.getElementById('res-core').innerText = result.core;
@@ -233,16 +241,12 @@
             document.getElementById('res-roles').innerHTML = result.roles; 
             document.getElementById('res-celebs').innerText = result.celebs;
 
-            // 结果页由于内容长可能处于滚动状态，每次生成新结果自动回到顶部
             document.getElementById('mainContainer').scrollTop = 0;
         }
 
-        // 新增：切换回输入页面的函数，保留用户的表单输入
         function returnToInput() {
             document.getElementById('result-screen').style.display = 'none';
             document.getElementById('input-screen').style.display = 'block';
-            
-            // 丝滑地将滚动条归位到最顶端
             document.getElementById('mainContainer').scrollTop = 0;
         }
     </script>
