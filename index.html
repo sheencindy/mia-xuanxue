@@ -34,12 +34,15 @@
 
         /* --- 标题区域 --- */
         .header-section { text-align: center; margin-bottom: 25px; }
+        
+        /* 核心 Logo 样式 (被首页和海报共同调用) */
         .logo-img {
             width: 120px; height: 120px; object-fit: cover; margin-bottom: 5px;
             filter: drop-shadow(0 0 15px rgba(217, 119, 6, 0.6));
             -webkit-mask-image: radial-gradient(circle at center, black 45%, transparent 70%);
             mask-image: radial-gradient(circle at center, black 45%, transparent 70%);
         }
+        
         .title { color: #D97706; font-size: 16px; letter-spacing: 2px; margin: 0; font-weight: 600; }
         .lab-title { color: #F59E0B; font-size: 32px; font-weight: 900; letter-spacing: 4px; margin: 5px 0; text-shadow: 0 0 20px rgba(217, 119, 6, 0.6); }
         .subtitle { color: #93C5FD; font-size: 13px; opacity: 0.8; text-align: center;}
@@ -68,7 +71,7 @@
             display: flex; gap: 12px; margin-top: 20px; margin-bottom: 10px;
         }
         .action-buttons .submit-btn {
-            margin: 0; padding: 14px 10px; font-size: 14px; flex: 1;
+            margin: 0; padding: 14px 5px; font-size: 14px; flex: 1;
         }
 
         /* --- 结果页 --- */
@@ -90,14 +93,32 @@
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9); z-index: 2000; flex-direction: column; justify-content: center; align-items: center;
         }
-        #poster-img { width: 85%; border-radius: 10px; box-shadow: 0 0 30px #000; }
+        #poster-img { width: 85%; border-radius: 10px; box-shadow: 0 0 30px #000; max-height: 80vh; object-fit: contain; }
         .close-poster { color: #fff; margin-top: 20px; padding: 10px 20px; border: 1px solid #fff; border-radius: 5px; cursor: pointer; }
 
-        /* 隐藏的真实海报模板 (16:9 适合手机分享) */
+        /* --- 隐藏的真实海报模板 (重构：全局毛玻璃设计) --- */
         #poster-template {
-            position: absolute; left: -9999px; width: 375px; background: #0a0f1e url('bg.jpg');
-            background-size: cover; background-position: center; padding: 40px 30px; box-sizing: border-box;
+            position: absolute; left: -9999px; width: 420px; 
+            background: url('bg.jpg') center/cover;
+            padding: 25px 20px; box-sizing: border-box;
         }
+        /* 海报内部的毛玻璃卡片 */
+        .poster-glass-card {
+            background-color: rgba(10, 15, 30, 0.85); /* 加深底色防强光背景 */
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px; padding: 30px 25px;
+            border: 1px solid rgba(217, 119, 6, 0.4);
+            box-shadow: 0 0 30px rgba(37, 99, 235, 0.3), inset 0 0 10px rgba(217, 119, 6, 0.2);
+        }
+        /* 海报里的专属小 Logo 尺寸 */
+        .poster-logo { width: 90px; height: 90px; }
+        
+        .poster-section-title { color: #F59E0B; font-weight: bold; margin: 18px 0 8px 0; font-size: 15px; }
+        .poster-section-content { color: #DBEAFE; font-size: 13.5px; line-height: 1.6; }
+        .poster-section-content ul { margin: 0; padding-left: 20px; color: #93C5FD; }
+        .poster-section-content li { margin-bottom: 5px; }
+        .poster-section-content strong { color: #FCD34D; }
+
         .poster-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 30px; border-top: 1px solid rgba(217,119,6,0.3); padding-top: 20px; }
         .qr-code { width: 75px; height: 75px; background: white; padding: 5px; border-radius: 5px; }
     </style>
@@ -113,27 +134,39 @@
     </div>
 
     <div id="poster-template">
-        <div style="text-align:center;">
-            <img src="logo.jpg" style="width:90px; height:90px; object-fit: cover; filter: drop-shadow(0 0 15px rgba(217, 119, 6, 0.6)); -webkit-mask-image: radial-gradient(circle at center, black 45%, transparent 70%); mask-image: radial-gradient(circle at center, black 45%, transparent 70%);">
-            <div style="color:#D97706; font-size:18px; margin-top:5px; font-weight: bold; letter-spacing: 2px;">Mia妙言 · 玄学实验室</div>
-        </div>
-        <div style="margin-top:35px; text-align:center;">
-            <div style="color:#93C5FD; font-size:14px; letter-spacing:2px;">—— 核心能量原型 ——</div>
-            <div id="post-name" style="color:#D97706; font-size:52px; font-weight:900; margin:5px 0; text-shadow: 0 0 15px rgba(217, 119, 6, 0.6);">乙木</div>
-            <div id="post-tag" style="color:#FCD34D; font-size:18px; font-weight:bold; letter-spacing: 1px;">The Vine · 生态连接者</div>
-        </div>
-        <div style="margin-top:30px; background: rgba(10, 15, 30, 0.85); padding:25px 20px; border-radius:15px; font-size:14px; line-height:1.6; color:#DBEAFE; border: 1px solid rgba(217, 119, 6, 0.4); box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8), 0 0 20px rgba(37, 99, 235, 0.2);">
-            <div style="color:#F59E0B; font-weight:bold; margin-bottom:8px; font-size: 15px;">💻 底层代码</div>
-            <div id="post-core" style="margin-bottom:18px; color:#93C5FD;">-</div>
-            <div style="color:#F59E0B; font-weight:bold; margin-bottom:8px; font-size: 15px;">⚙️ 核心算法</div>
-            <div id="post-inner">-</div>
-        </div>
-        <div class="poster-footer">
-            <div style="color:#FDE68A; font-size:12px;">
-                <p style="margin:0; font-weight: bold; font-size: 13px;">💡 解码你的专属赛博人生剧本</p>
-                <p style="margin:6px 0 0 0; opacity:0.8; letter-spacing: 1px;">www.mia-xuanxue.fun</p>
+        <div class="poster-glass-card">
+            <div style="text-align:center;">
+                <img src="logo.jpg" class="logo-img poster-logo">
+                <div style="color:#D97706; font-size:18px; margin-top:5px; font-weight: bold; letter-spacing: 2px;">Mia妙言 · 玄学实验室</div>
             </div>
-            <div id="qrcode" class="qr-code"></div>
+            
+            <div style="margin-top:25px; text-align:center; border-bottom: 1px solid rgba(217, 119, 6, 0.3); padding-bottom: 20px;">
+                <div style="color:#93C5FD; font-size:14px; letter-spacing:2px;">—— 核心能量原型 ——</div>
+                <div id="post-name" style="color:#D97706; font-size:46px; font-weight:900; margin:5px 0; text-shadow: 0 0 15px rgba(217, 119, 6, 0.6);">-</div>
+                <div id="post-tag" style="color:#FCD34D; font-size:16px; font-weight:bold; letter-spacing: 1px;">-</div>
+            </div>
+            
+            <div>
+                <div class="poster-section-title">💻 底层代码</div>
+                <div class="poster-section-content highlight-text" id="post-core">-</div>
+                
+                <div class="poster-section-title">🔮 外在全息投影</div>
+                <div class="poster-section-content" id="post-aura">-</div>
+                
+                <div class="poster-section-title">⚙️ 内核算法</div>
+                <div class="poster-section-content" id="post-inner">-</div>
+                
+                <div class="poster-section-title">🎭 多元宇宙角色</div>
+                <div class="poster-section-content" id="post-roles">-</div>
+            </div>
+
+            <div class="poster-footer">
+                <div style="color:#FDE68A; font-size:12px;">
+                    <p style="margin:0; font-weight: bold; font-size: 13px;">💡 解码你的专属赛博人生剧本</p>
+                    <p style="margin:6px 0 0 0; opacity:0.8; letter-spacing: 1px;">www.mia-xuanxue.fun</p>
+                </div>
+                <div id="qrcode" class="qr-code"></div>
+            </div>
         </div>
     </div>
 
@@ -185,8 +218,8 @@
             </div>
 
             <div class="action-buttons">
-                <button class="submit-btn" onclick="generatePoster()">📸 生成海报</button>
                 <button class="submit-btn" onclick="returnToInput()">↺ 重新解码</button>
+                <button class="submit-btn" onclick="generatePoster()">📸 生成海报</button>
             </div>
         </div>
     </div>
@@ -203,18 +236,18 @@
         // 初始化海报中的二维码
         new QRCode(document.getElementById("qrcode"), { text: "https://www.mia-xuanxue.fun", width: 75, height: 75, colorDark : "#000000", colorLight : "#ffffff" });
 
-        // 数据字典：删除MBTI内容
+        // 数据字典：已彻底清除 MBTI 标签
         const archetypes = [
             { stem: "甲木", tag: "The Oak · 创世架构师", core: "破土而出的第一行代码，自带向上生长的破局之力与绝对的系统主导权。", aura: "骨架舒展，身形挺拔；眼神坚定，走路带风。出场自带“主角光环”与正气感。", inner: "<ul><li><strong>目标锁定：</strong>野心与担当并存，认准方向就不回头。</li><li><strong>直筒逻辑：</strong>正直坦荡，宁折不弯，拒绝无效的弯弯绕绕。</li><li><strong>抗压满格：</strong>压力越大，生长的势能越强。</li></ul>", roles: "<strong>古代/现代职场：</strong>开国君主 / 独角兽CEO、行业标准制定者<br><strong>团队定位：</strong>决策引擎、方向指引者<br><strong>社交/恋爱：</strong>靠谱大哥(大姐) / 强势守护型", celebs: "埃隆·马斯克 (科技)、刘涛 (演艺)、岳飞 (历史)" },
-            { stem: "乙木", tag: "The Vine · 生态连接者", core: "蜿蜒生长的柔性网络，极其敏锐的节点感知力，能将孤立的数据编织成生态系统。", aura: "线条流畅细腻，气质柔和温婉；穿搭品味极佳，自带高级的文艺氛围感。", inner: "<ul><li><strong>高频共情：</strong>情绪读取能力满分，懂迁就、会照顾人。</li><li><strong>曲线救国：</strong>韧性极强，能屈能伸，用柔软的身段解决硬冲突。</li><li><strong>审美天赋：</strong>艺术感与细节捕捉能力天生在线。</li></ul>", roles: "<strong>古代/现代职场：</strong>才女谋士 / 社区生态总监、跨界公关<br><strong>团队定位：</strong>超级粘合剂、创意氛围组<br><strong>社交/恋爱：</strong>暖心知己 / 情绪价值提供机", celebs: "奥黛丽·赫本 (演艺)、胡歌 (演艺)、林徽因 (文化)" },
+            { stem: "乙木", tag: "The Vine · 生态连接者", core: "蜿蜒生长的柔性网络，极其敏锐的节点感知力，能将孤立的数据编织成生态系统。", aura: "线条流畅细腻，气质柔和温婉；穿搭品味极佳，自带高级的文艺氛围场。", inner: "<ul><li><strong>高频共情：</strong>情绪读取能力满分，懂迁就、会照顾人。</li><li><strong>曲线救国：</strong>韧性极强，能屈能伸，用柔软的身段解决硬冲突。</li><li><strong>审美天赋：</strong>艺术感与细节捕捉能力天生在线。</li></ul>", roles: "<strong>古代/现代职场：</strong>才女谋士 / 社区生态总监、跨界公关<br><strong>团队定位：</strong>超级粘合剂、创意氛围组<br><strong>社交/恋爱：</strong>暖心知己 / 情绪价值提供机", celebs: "奥黛丽·赫本 (演艺)、胡歌 (演艺)、林徽因 (文化)" },
             { stem: "丙火", tag: "The Sun · 核心发光体", core: "系统中的恒星级能源，持续输出高燃热量，自带强大的辐射场与开源布道能力。", aura: "气色红润，笑容明亮；眼神有光，气场极致外放，走到哪都是聚光灯的中心。", inner: "<ul><li><strong>高燃输出：</strong>外向开朗，真诚直接，讨厌阴暗面。</li><li><strong>情绪感染：</strong>极强的煽动性与带动感，能瞬间点燃全场。</li><li><strong>慷慨开源：</strong>讲义气，乐于分享能量与资源。</li></ul>", roles: "<strong>古代/现代职场：</strong>盛世帝王 / 头部主播、明星演讲者<br><strong>团队定位：</strong>破冰先锋、绝对气氛担当<br><strong>社交/恋爱：</strong>聚会灵魂 / 浪漫直球型", celebs: "莱昂纳多(小李子) (演艺)、谢娜 (主持)、李白 (历史)" },
             { stem: "丁火", tag: "The Star · 灵感启明者", core: "黑夜中的高亮像素，数据盲区里的探照灯；能量不大但穿透力极强，专攻底层逻辑。", aura: "气质温柔有灵气，眼神深邃；自带柔光滤镜，舒服不刺眼，越看越有味道。", inner: "<ul><li><strong>深度洞察：</strong>情感细腻，能看透事物表象直击灵魂。</li><li><strong>极致专注：</strong>有自己独立运行的小世界，执着且持久。</li><li><strong>外柔内刚：</strong>看似温和，但底层有极其坚固的安全协议。</li></ul>", roles: "<strong>古代/现代职场：</strong>隐世谋士 / AI提示词工程师、深度调查记者<br><strong>团队定位：</strong>灵感火花塞、走心分析师<br><strong>社交/恋爱：</strong>温柔树洞 / 精神共振型", celebs: "泰勒·斯威夫特 (音乐)、周杰伦 (音乐)、貂蝉 (历史)" },
-            { stem: "戊土", tag: "The Mountain · 矩阵压舱石", core: "承载万亿参数的物理服务器集群，系统中最厚重、最可靠的防御与存储基石。", aura: "身形偏厚实稳重，面容端正；没有攻击性，但给人一种“这人能扛事”的绝对信任感。", inner: "<ul><li><strong>绝对稳健：</strong>诚信务实，不搞虚假数据，行动胜于雄辩。</li><li><strong>海量包容：</strong>宽容度极高，能承载巨大的压力与复杂情绪。</li><li><strong>长期主义：</strong>传统保守，追求终极的安全感与系统稳定。</li></ul>", roles: "<strong>古代/现代职场：</strong>镇国宰相 / 基础设施架构师、合规高管<br><strong>团队定位：</strong>定海神针、最后一道防线<br><strong>社交/恋爱：</strong>踏实契约型 / 踏实契约型", celebs: "沃伦·巴菲特 (投资)、董明珠 (商业)、安格拉·默克尔 (政治)" },
-            { stem: "己土", tag: "The Garden · 算法培育者", core: "拥有超级收纳能力与孵化环境的田园数据库；擅长整理冗杂信息，滋养初创项目。", aura: "温婉柔和，皮肤细腻；气质干净舒服，像微风一样没有压迫感，亲和力拉满。", inner: "<ul><li><strong>极致服务：</strong>细心体贴，擅长察觉并照顾系统的每一个微小进程。</li><li><strong>低调务实：</strong>不争抢算力，默默付出，在后台维持运转。</li><li><strong>高效整理：</strong>收纳整理、规划统筹能力一流。</li></ul>", roles: "<strong>古代/现代职场：</strong>悬壶医女 / 首席人力资源(CHRO)、用户运营<br><strong>团队定位：</strong>后勤大总管、超级辅助与润滑剂<br><strong>社交/恋爱：</strong>无微不至型 / 无微不至型", celebs: "凯特王妃 (皇室)、黄磊 (演艺)、特蕾莎修女 (慈善)" },
+            { stem: "戊土", tag: "The Mountain · 矩阵压舱石", core: "承载万亿参数的物理服务器集群，系统中最厚重、最可靠的防御与存储基石。", aura: "身形偏厚实稳重，面容端正；没有攻击性，但给人一种“这人能扛事”的绝对信任感。", inner: "<ul><li><strong>绝对稳健：</strong>诚信务实，不搞虚假数据，行动胜于雄辩。</li><li><strong>海量包容：</strong>宽容度极高，能承载巨大的压力与复杂情绪。</li><li><strong>长期主义：</strong>传统保守，追求终极的安全感与系统稳定。</li></ul>", roles: "<strong>古代/现代职场：</strong>镇国宰相 / 基础设施架构师、合规高管<br><strong>团队定位：</strong>定海神针、最后一道防线<br><strong>社交/恋爱：</strong>最靠谱后盾 / 踏实契约型", celebs: "沃伦·巴菲特 (投资)、董明珠 (商业)、安格拉·默克尔 (政治)" },
+            { stem: "己土", tag: "The Garden · 算法培育者", core: "拥有超级收纳能力与孵化环境的田园数据库；擅长整理冗杂信息，滋养初创项目。", aura: "温婉柔和，皮肤细腻；气质干净舒服，像微风一样没有压迫感，亲和力拉满。", inner: "<ul><li><strong>极致服务：</strong>细心体贴，擅长察觉并照顾系统的每一个微小进程。</li><li><strong>低调务实：</strong>不争抢算力，默默付出，在后台维持运转。</li><li><strong>高效整理：</strong>收纳整理、规划统筹能力一流。</li></ul>", roles: "<strong>古代/现代职场：</strong>悬壶医女 / 首席人力资源(CHRO)、用户运营<br><strong>团队定位：</strong>后勤大总管、超级辅助与润滑剂<br><strong>社交/恋爱：</strong>贴心大管家 / 无微不至型", celebs: "凯特王妃 (皇室)、黄磊 (演艺)、特蕾莎修女 (慈善)" },
             { stem: "庚金", tag: "The Sword · 破局终结者", core: "拥有最高执行权限的杀毒软件与改革指令；硬核、锋利，最擅长在混乱中重构秩序。", aura: "五官立体锋利，眼神犀利；气场冷冽高级，散发着一种“少惹我但很公正”的压迫感。", inner: "<ul><li><strong>极简杀伐：</strong>果断直接，讨厌拖泥带水，执行力拉满。</li><li><strong>非黑即白：</strong>极度讲求原则与逻辑，不畏强权，不讲人情。</li><li><strong>钢铁意志：</strong>抗压极强，属于“不破不立”的改革派。</li></ul>", roles: "<strong>古代/现代职场：</strong>铁血武将 / 危机公关、重构工程师<br><strong>团队定位：</strong>核心战斗力、系统纠错者<br><strong>社交/恋爱：</strong>敢说真话的诤友 / 直率硬核型", celebs: "克里斯蒂亚诺·罗纳尔多(C罗)、那英 (音乐)、关羽 (历史)" },
-            { stem: "辛金", tag: "The Jade · 像素级雕琢者", core: "经过千万次迭代打磨的顶级UI界面；对精度、品质和美感有着近乎代码般苛刻的要求。", aura: "精致优雅，五官小巧；自带清冷的贵气与距离感，低调奢华，拒绝粗糙。", inner: "<ul><li><strong>完美主义：</strong>细节控晚期，对瑕疵零容忍。</li><li><strong>高阶审美：</strong>品味极佳，追求精神与物质的双重高级感。</li><li><strong>外冷内热：</strong>傲娇毒舌但心软，极其注重个人的体面与尊严。</li></ul>", roles: "<strong>古代/现代职场：</strong>绝代贵妃 / 奢侈品主理人、算法调优专家<br><strong>团队定位：</strong>品质守门员、品味天花板<br><strong>社交/恋爱：</strong>精致浪漫型 / 精致浪漫型", celebs: "安妮·海瑟薇 (演艺)、梁朝伟 (演艺)、杨贵妃 (历史)" },
+            { stem: "辛金", tag: "The Jade · 像素级雕琢者", core: "经过千万次迭代打磨的顶级UI界面；对精度、品质和美感有着近乎代码般苛刻的要求。", aura: "精致优雅，五官小巧；自带清冷的贵气与距离感，低调奢华，拒绝粗糙。", inner: "<ul><li><strong>完美主义：</strong>细节控晚期，对瑕疵零容忍。</li><li><strong>高阶审美：</strong>品味极佳，追求精神与物质的双重高级感。</li><li><strong>外冷内热：</strong>傲娇毒舌但心软，极其注重个人的体面与尊严。</li></ul>", roles: "<strong>古代/现代职场：</strong>绝代贵妃 / 奢侈品主理人、算法调优专家<br><strong>团队定位：</strong>品质守门员、品味天花板<br><strong>社交/恋爱：</strong>傲娇名媛(贵公子) / 精致浪漫型", celebs: "安妮·海瑟薇 (演艺)、梁朝伟 (演艺)、杨贵妃 (历史)" },
             { stem: "壬水", tag: "The Ocean · 全局浪潮者", core: "席卷整个网络的巨大流量洪流与宏观算法；不受边界限制，善于驾驭海量数据与趋势。", aura: "气质洒脱大气，眼神深邃且灵动；自带一种见惯大风大浪的通透感与不羁。", inner: "<ul><li><strong>宏观演算：</strong>智慧通透，学习力强，永远站在全局视角看问题。</li><li><strong>动态适应：</strong>随机应变，豁达不拘小节，讨厌被规则死死绑住。</li><li><strong>冒险开拓：</strong>永远在追逐新的浪潮，偶尔显得喜新厌旧。</li></ul>", roles: "<strong>古代/现代职场：</strong>运筹帷幄的军师 / 风险投资人(VC)、Web3先行者<br><strong>团队定位：</strong>宏观战略家、脑洞发动机<br><strong>社交/恋爱：</strong>有趣的冒险家 / 自由流浪型", celebs: "理查德·布兰森 (商业)、高圆圆 (演艺)、诸葛亮 (历史)" },
-            { stem: "癸水", tag: "The Dew · 幽灵观察者", core: "悄无声息的隐形数据流，能够穿透任何防火墙，拥有系统内最强的情绪算力和直觉。", aura: "清冷干净，身形偏纤细；眼神清澈但极其内敛，给人一种安静、神秘且高级的感觉。", inner: "<ul><li><strong>情绪黑客：</strong>直觉力与敏感度惊人，能一眼看透人性和底层动机。</li><li><strong>柔性渗透：</strong>低调不张扬，外柔内刚，最擅长迂回包抄达成目的.</li><li><strong>深谋远虑：</strong>走一步算十步的幕后策略家。</li></ul>", roles: "<strong>古代/现代职场：</strong>幕后隐士 / 数据分析师、潜意识心理学家<br><strong>团队定位：</strong>影子智囊团、信息处理中枢<br><strong>社交/恋爱：</strong>终极树洞 / 温柔试探型", celebs: "基努·里维斯 (演艺)、刘亦菲 (演艺)、阿兰·图灵 (科技)" }
+            { stem: "癸水", tag: "The Dew · 幽灵观察者", core: "悄无声息的隐形数据流，能够穿透任何防火墙，拥有系统内最强的情绪算力和直觉。", aura: "清冷干净，身形偏纤细；眼神清澈但极其内敛，给人一种安静、神秘且高级的感觉。", inner: "<ul><li><strong>情绪黑客：</strong>直觉力与敏感度惊人，能一眼看透人性和底层动机。</li><li><strong>柔性渗透：</strong>低调不张扬，外柔内刚，最擅长迂回包抄达成目的。</li><li><strong>深谋远虑：</strong>走一步算十步的幕后策略家。</li></ul>", roles: "<strong>古代/现代职场：</strong>幕后隐士 / 首席数据分析师、潜意识心理学家<br><strong>团队定位：</strong>影子智囊团、信息处理中枢<br><strong>社交/恋爱：</strong>终极树洞 / 温柔试探型", celebs: "基努·里维斯 (演艺)、刘亦菲 (演艺)、阿兰·图灵 (科技)" }
         ];
 
         function startDataParsing() {
@@ -238,14 +271,13 @@
             document.getElementById('res-roles').innerHTML = result.roles;
             document.getElementById('res-celebs').innerText = result.celebs;
 
-            // 注入 海报模板 数据：修复Logo，完善内容
+            // 注入海报数据 (保留除名人样本外的所有核心内容)
             document.getElementById('post-name').innerText = result.stem;
             document.getElementById('post-tag').innerText = result.tag;
             document.getElementById('post-core').innerText = result.core;
-            // 清理 HTML 标签以纯文本形式放入海报，稍微调整一下格式使其在海报上更易读
-            // 核心修改：移除MBTI标签，保留其他格式
-            const cleanInner = result.inner.replace(/<ul>|<li>/g, '').replace(/<\/li>/g, '\n').replace(/<\/ul>/g, '');
-            document.getElementById('post-inner').innerText = cleanInner;
+            document.getElementById('post-aura').innerText = result.aura;
+            document.getElementById('post-inner').innerHTML = result.inner; // 保持 HTML 列表格式
+            document.getElementById('post-roles').innerHTML = result.roles; // 保持换行格式
             
             // 回顶部
             document.getElementById('mainContainer').scrollTop = 0;
