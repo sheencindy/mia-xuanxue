@@ -52,7 +52,6 @@
         label { display: block; color: #FCD34D; font-size: 14px; margin-bottom: 8px; font-weight: 500; }
         label span.required { color: #2563EB; text-shadow: 0 0 5px rgba(37, 99, 235, 0.8); }
         .date-inputs { display: flex; gap: 8px; }
-        /* 修复下拉框样式，防止手机端无法点击 */
         select {
             flex: 1; padding: 12px; background: rgba(37, 99, 235, 0.15); border: 1px solid #2563EB;
             border-radius: 8px; color: #FDE68A; font-size: 14px; outline: none;
@@ -109,7 +108,7 @@
             padding: 25px 20px; box-sizing: border-box;
         }
         
-        /* 核心修复：海报浮层底色，使用完全不透明、纯净深邃的藏青色(#0a101e)解决直透发黄问题 */
+        /* 海报浮层底色：纯净深邃的藏青色(#0a101e)，解决直透发黄问题 */
         .poster-glass-card {
             background-color: #0a101e; 
             border-radius: 20px; padding: 30px 25px; box-sizing: border-box;
@@ -117,17 +116,28 @@
             box-shadow: 0 0 30px rgba(37, 99, 235, 0.3);
         }
         
-        /* 核心修复：海报专用 Logo 融合层，正圆形且带有金色外发光，全息投影悬浮效果 */
+        /* 🌟 核心修复：海报专用 Logo 融合层 🌟 */
         .poster-logo-container {
-            width: 120px; height: 120px; margin: 0 auto;
-            border-radius: 50%; /* 正圆形裁剪 */
-            box-shadow: 0 0 15px rgba(217, 119, 6, 0.6); /* 金色外发光虚化边缘 */
-            background: radial-gradient(circle at center, rgba(10, 16, 30, 0.8) 0%, rgba(10, 16, 30, 0) 70%);
-            overflow: hidden; 
+            position: relative;
+            width: 120px; height: 120px; margin: 0 auto 5px auto;
+            border-radius: 50%; 
+            box-shadow: 0 0 20px rgba(217, 119, 6, 0.6); /* 金色外发光 */
+            flex-shrink: 0; /* 绝对防止被排版挤压变形 */
         }
         .poster-logo-container img {
-            width: 100%; height: 100%; object-fit: cover;
+            width: 120px; height: 120px; 
+            object-fit: cover; /* 绝对保证图片不变形拉伸 */
             border-radius: 50%; 
+            display: block;
+        }
+        /* 伪元素遮罩：制造向内渐变消融的效果，完美融合进藏青色底板 */
+        .poster-logo-container::after {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, transparent 40%, #0a101e 85%);
+            pointer-events: none;
         }
         
         /* 海报内部的内容排版 */
@@ -244,7 +254,7 @@
     </div>
 
     <script>
-        // 1. 初始化下拉框选项
+        // 初始化下拉框选项
         const ys = document.getElementById('year');
         const ms = document.getElementById('month');
         const ds = document.getElementById('day');
@@ -257,7 +267,7 @@
         ms.value = "6";
         ds.value = "15";
 
-        // 2. 初始化二维码 (带有异常捕获，不阻塞主线程)
+        // 初始化二维码
         try {
             new QRCode(document.getElementById("qrcode"), { 
                 text: "https://www.mia-xuanxue.fun", width: 75, height: 75, colorDark : "#000000", colorLight : "#ffffff" 
@@ -266,7 +276,7 @@
             console.error("二维码生成失败:", e);
         }
 
-        // 3. 数据字典：统一使用标准的数组结构，彻底消除因键值调用错误导致的崩溃
+        // 数据字典：纯正赛博科技玄学版，内核算法已彻底剔除 MBTI
         const archetypes = [
             { stem: "甲木", tag: "The Oak · 创世架构师", core: "破土而出的第一行代码，自带向上生长的破局之力与绝对的系统主导权。", aura: "骨架舒展，身形挺拔；眼神坚定，走路带风。出场自带“主角光环”与正气感。", inner: "<ul><li><strong>目标锁定：</strong>野心与担当并存，认准方向就不回头。</li><li><strong>直筒逻辑：</strong>正直坦荡，宁折不弯，拒绝无效的弯弯绕绕。</li><li><strong>抗压满格：</strong>压力越大，生长的势能越强。</li></ul>", roles: "古代/现代职场：开国君主 / 独角兽CEO、行业标准制定者<br>团队定位：决策引擎、方向指引者<br>社交/恋爱：靠谱大哥(大姐) / 强势守护型", celebs: "埃隆·马斯克 (科技)、刘涛 (演艺)、岳飞 (历史)" },
             { stem: "乙木", tag: "The Vine · 生态连接者", core: "蜿蜒生长的柔性网络，极其敏锐的节点感知力，能将孤立的数据编织成生态系统。", aura: "线条流畅细腻，气质柔和温婉；穿搭品味极佳，自带高级的文艺氛围场。", inner: "<ul><li><strong>高频共情：</strong>情绪读取能力满分，懂迁就、会照顾人。</li><li><strong>曲线救国：</strong>韧性极强，能屈能伸，用柔软的身段解决硬冲突。</li><li><strong>审美天赋：</strong>艺术感与细节捕捉能力天生在线。</li></ul>", roles: "古代/现代职场：才女谋士 / 社区生态总监、跨界公关<br>团队定位：超级粘合剂、创意氛围组<br>社交/恋爱：暖心知己 / 情绪价值提供机", celebs: "奥黛丽·赫本 (演艺)、胡歌 (演艺)、林徽因 (文化)" },
@@ -280,7 +290,7 @@
             { stem: "癸水", tag: "The Dew · 幽灵观察者", core: "悄无声息的隐形数据流，能够穿透任何防火墙，拥有系统内最强的情绪算力和直觉。", aura: "清冷干净，身形偏纤细；眼神清澈但极其内敛，给人一种安静、神秘且高级的感觉。", inner: "<ul><li><strong>情绪黑客：</strong>直觉力与敏感度惊人，能一眼看透人性和底层动机。</li><li><strong>柔性渗透：</strong>低调不张扬，外柔内刚，最擅长迂回包抄达成目的。</li><li><strong>深谋远虑：</strong>走一步算十步的幕后策略家。</li></ul>", roles: "古代/现代职场：幕后隐士 / 首席数据分析师、潜意识心理学家<br>团队定位：影子智囊团、信息处理中枢<br>社交/恋爱：终极树洞 / 温柔试探型", celebs: "刘亦菲 (演艺)、基努·里维斯 (演艺)、阿兰·图灵 (科技)" }
         ];
 
-        // 4. 解析逻辑（加入容错保护）
+        // 解析逻辑（加入容错保护）
         function startDataParsing() {
             try {
                 const y = parseInt(ys.value);
@@ -325,7 +335,6 @@
             }
         }
 
-        // 重新解码按钮功能：隐藏结果屏，显示输入屏，保留输入数据
         function returnToInput() {
             document.getElementById('result-screen').style.display = 'none';
             document.getElementById('input-screen').style.display = 'block';
