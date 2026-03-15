@@ -22,7 +22,7 @@
         }
 
         .app-container {
-            background-color: rgba(10, 15, 30, 0.8); backdrop-filter: blur(15px);
+            background-color: rgba(10, 15, 30, 0.8); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             border-radius: 20px; padding: 30px 20px; width: 90%; max-width: 400px;
             max-height: 85vh; overflow-y: auto; border: 1px solid rgba(217, 119, 6, 0.4);
             box-shadow: 0 0 30px rgba(37, 99, 235, 0.3); position: relative;
@@ -38,6 +38,7 @@
             width: 120px; height: 120px; object-fit: cover; margin-bottom: 5px;
             filter: drop-shadow(0 0 15px rgba(217, 119, 6, 0.6));
             -webkit-mask-image: radial-gradient(circle at center, black 45%, transparent 70%);
+            mask-image: radial-gradient(circle at center, black 45%, transparent 70%);
         }
         .title { color: #D97706; font-size: 16px; letter-spacing: 2px; margin: 0; font-weight: 600; }
         .lab-title { color: #F59E0B; font-size: 32px; font-weight: 900; letter-spacing: 4px; margin: 5px 0; text-shadow: 0 0 20px rgba(217, 119, 6, 0.6); }
@@ -49,7 +50,7 @@
         .date-inputs { display: flex; gap: 8px; }
         select {
             flex: 1; padding: 12px; background: rgba(37, 99, 235, 0.15); border: 1px solid #2563EB;
-            border-radius: 8px; color: #FDE68A; font-size: 14px; text-align: center; appearance: none;
+            border-radius: 8px; color: #FDE68A; font-size: 14px; text-align: center; appearance: none; outline: none;
         }
 
         /* --- 按钮 (醒目金色渐变) --- */
@@ -61,6 +62,14 @@
         }
         .submit-btn:hover { background: linear-gradient(135deg, #F59E0B, #D97706); box-shadow: 0 0 20px rgba(217, 119, 6, 0.7); }
         .submit-btn:active { transform: scale(0.98); }
+
+        /* 结果页并排按钮组布局 */
+        .action-buttons {
+            display: flex; gap: 12px; margin-top: 20px; margin-bottom: 10px;
+        }
+        .action-buttons .submit-btn {
+            margin: 0; padding: 14px 10px; font-size: 14px; flex: 1;
+        }
 
         /* --- 结果页 --- */
         #result-screen { display: none; }
@@ -82,15 +91,15 @@
             background: rgba(0,0,0,0.9); z-index: 2000; flex-direction: column; justify-content: center; align-items: center;
         }
         #poster-img { width: 85%; border-radius: 10px; box-shadow: 0 0 30px #000; }
-        .close-poster { color: #fff; margin-top: 20px; padding: 10px 20px; border: 1px solid #fff; border-radius: 5px; }
+        .close-poster { color: #fff; margin-top: 20px; padding: 10px 20px; border: 1px solid #fff; border-radius: 5px; cursor: pointer; }
 
         /* 隐藏的真实海报模板 (16:9 适合手机分享) */
         #poster-template {
             position: absolute; left: -9999px; width: 375px; background: #0a0f1e url('bg.jpg');
-            background-size: cover; padding: 40px 30px; box-sizing: border-box;
+            background-size: cover; background-position: center; padding: 40px 30px; box-sizing: border-box;
         }
         .poster-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 30px; border-top: 1px solid rgba(217,119,6,0.3); padding-top: 20px; }
-        .qr-code { width: 80px; height: 80px; background: white; padding: 5px; border-radius: 5px; }
+        .qr-code { width: 75px; height: 75px; background: white; padding: 5px; border-radius: 5px; }
     </style>
 </head>
 <body>
@@ -98,31 +107,31 @@
     <div id="loading-overlay" style="display:none; position:fixed; z-index:3000; color:#FCD34D; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); justify-content:center; align-items:center;">正在启动全息渲染...</div>
 
     <div id="poster-overlay">
-        <p style="color:#FCD34D; margin-bottom:10px;">长按图片保存，分享给好友</p>
+        <p style="color:#FCD34D; margin-bottom:10px; font-size: 15px; font-weight: bold;">长按上方图片保存，分享给好友</p>
         <img id="poster-img" src="">
         <div class="close-poster" onclick="closePoster()">返回实验室</div>
     </div>
 
     <div id="poster-template">
         <div style="text-align:center;">
-            <img src="logo.jpg" style="width:80px; height:80px; border-radius:50%; border:2px solid #D97706; object-fit: cover;">
-            <div style="color:#D97706; font-size:18px; margin-top:10px; font-weight: bold;">Mia妙言 · 玄学实验室</div>
+            <img src="logo.jpg" style="width:90px; height:90px; object-fit: cover; filter: drop-shadow(0 0 15px rgba(217, 119, 6, 0.6)); -webkit-mask-image: radial-gradient(circle at center, black 45%, transparent 70%); mask-image: radial-gradient(circle at center, black 45%, transparent 70%);">
+            <div style="color:#D97706; font-size:18px; margin-top:5px; font-weight: bold; letter-spacing: 2px;">Mia妙言 · 玄学实验室</div>
         </div>
-        <div style="margin-top:40px; text-align:center;">
+        <div style="margin-top:35px; text-align:center;">
             <div style="color:#93C5FD; font-size:14px; letter-spacing:2px;">—— 核心能量原型 ——</div>
-            <div id="post-name" style="color:#D97706; font-size:48px; font-weight:900; margin:10px 0;">-</div>
-            <div id="post-tag" style="color:#FCD34D; font-size:18px; font-weight:bold;">-</div>
+            <div id="post-name" style="color:#D97706; font-size:52px; font-weight:900; margin:5px 0; text-shadow: 0 0 15px rgba(217, 119, 6, 0.6);">乙木</div>
+            <div id="post-tag" style="color:#FCD34D; font-size:18px; font-weight:bold; letter-spacing: 1px;">The Vine · 生态连接者</div>
         </div>
-        <div style="margin-top:30px; background:rgba(255,255,255,0.05); padding:20px; border-radius:10px; font-size:14px; line-height:1.6; color:#DBEAFE; border: 1px solid rgba(37, 99, 235, 0.3);">
-            <div style="color:#F59E0B; font-weight:bold; margin-bottom:8px;">💻 底层代码</div>
-            <div id="post-core" style="margin-bottom:15px; color:#60A5FA;">-</div>
-            <div style="color:#F59E0B; font-weight:bold; margin-bottom:8px;">⚙️ 核心算法</div>
+        <div style="margin-top:30px; background: rgba(10, 15, 30, 0.85); padding:25px 20px; border-radius:15px; font-size:14px; line-height:1.6; color:#DBEAFE; border: 1px solid rgba(217, 119, 6, 0.4); box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8), 0 0 20px rgba(37, 99, 235, 0.2);">
+            <div style="color:#F59E0B; font-weight:bold; margin-bottom:8px; font-size: 15px;">💻 底层代码</div>
+            <div id="post-core" style="margin-bottom:18px; color:#93C5FD;">-</div>
+            <div style="color:#F59E0B; font-weight:bold; margin-bottom:8px; font-size: 15px;">⚙️ 核心算法</div>
             <div id="post-inner">-</div>
         </div>
         <div class="poster-footer">
             <div style="color:#FDE68A; font-size:12px;">
-                <p style="margin:0;">💡 解码你的专属赛博人生剧本</p>
-                <p style="margin:5px 0 0 0; opacity:0.7;">www.mia-xuanxue.fun</p>
+                <p style="margin:0; font-weight: bold; font-size: 13px;">💡 解码你的专属赛博人生剧本</p>
+                <p style="margin:6px 0 0 0; opacity:0.8; letter-spacing: 1px;">www.mia-xuanxue.fun</p>
             </div>
             <div id="qrcode" class="qr-code"></div>
         </div>
@@ -170,13 +179,15 @@
                 <div class="card-title">🎭 多元宇宙角色 (Multiverse Roles)</div>
                 <div class="card-content" id="res-roles">加载中...</div>
             </div>
-            <div class="data-card" style="margin-bottom: 25px;">
+            <div class="data-card">
                 <div class="card-title">🌟 能量共振样本 (Resonance)</div>
                 <div class="card-content" id="res-celebs">加载中...</div>
             </div>
 
-            <button class="submit-btn" onclick="generatePoster()" style="margin-bottom: 15px;">📸 生成我的能量图鉴 (分享海报)</button>
-            <button class="submit-btn" onclick="returnToInput()" style="margin-bottom: 10px;">↺ 重新解码</button>
+            <div class="action-buttons">
+                <button class="submit-btn" onclick="generatePoster()">📸 生成海报</button>
+                <button class="submit-btn" onclick="returnToInput()">↺ 重新解码</button>
+            </div>
         </div>
     </div>
 
@@ -190,7 +201,7 @@
         ys.value=1995; ms.value=6; ds.value=15;
 
         // 初始化海报中的二维码
-        new QRCode(document.getElementById("qrcode"), { text: "https://www.mia-xuanxue.fun", width: 80, height: 80, colorDark : "#000000", colorLight : "#ffffff" });
+        new QRCode(document.getElementById("qrcode"), { text: "https://www.mia-xuanxue.fun", width: 75, height: 75, colorDark : "#000000", colorLight : "#ffffff" });
 
         // 数据字典：完整恢复赛博玄学深度版！
         const archetypes = [
@@ -231,8 +242,8 @@
             document.getElementById('post-name').innerText = result.stem;
             document.getElementById('post-tag').innerText = result.tag;
             document.getElementById('post-core').innerText = result.core;
-            // 清理 HTML 标签以纯文本形式放入海报
-            const cleanInner = result.inner.replace(/<ul>|<li>|<\/li>|<strong>|<\/strong>/g, '').replace(/<\/ul>/g, '');
+            // 清理 HTML 标签以纯文本形式放入海报，稍微调整一下格式使其在海报上更易读
+            const cleanInner = result.inner.replace(/<ul>|<li>/g, '').replace(/<\/li>/g, '\n').replace(/<strong>|<\/strong>/g, '').replace(/<\/ul>/g, '');
             document.getElementById('post-inner').innerText = cleanInner;
             
             // 回顶部
