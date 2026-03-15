@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mia妙言 - 玄学实验室</title>
 
-    <meta name="description" content="Mia妙言：赛博玄学实验室。用数学、逻辑与代码，深度解析你的十维能量原型。">
     <meta property="og:title" content="Mia妙言 | 你的底层代码解析器">
-    <meta property="og:description" content="输入坐标，启动算力。立刻解码你的核心能量原型。">
+    <meta property="og:description" content="用科技拆解玄学，解码你的核心能量原型。">
     <meta property="og:image" content="https://www.mia-xuanxue.fun/bg.jpg">
     <meta property="og:url" content="https://www.mia-xuanxue.fun/">
 
@@ -15,7 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
     <style>
-        /* --- 视觉外壳 --- */
+        /* --- 基础样式 --- */
         body {
             background-image: url('bg.jpg'); background-size: cover; background-position: center;
             background-attachment: fixed; margin: 0; display: flex; justify-content: center;
@@ -27,23 +26,25 @@
             background-color: rgba(10, 15, 30, 0.75); 
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border-radius: 20px; padding: 30px 20px; width: 90%; max-width: 400px;
-            max-height: 85vh; overflow-y: auto; 
-            border: 1px solid rgba(217, 119, 6, 0.4);
-            box-shadow: 0 0 30px rgba(37, 99, 235, 0.3), inset 0 0 10px rgba(217, 119, 6, 0.2);
-            position: relative; scroll-behavior: smooth;
+            max-height: 85vh; overflow-y: auto; border: 1px solid rgba(217, 119, 6, 0.4);
+            box-shadow: 0 0 30px rgba(37, 99, 235, 0.3); position: relative;
+            scroll-behavior: smooth;
         }
 
         .app-container::-webkit-scrollbar { width: 4px; }
         .app-container::-webkit-scrollbar-thumb { background: #2563EB; border-radius: 10px; }
 
-        /* --- Logo 与 标题区 --- */
+        /* --- 标题区域 --- */
         .header-section { text-align: center; margin-bottom: 25px; }
+        
         .logo-img {
             width: 120px; height: 120px; object-fit: cover; margin-bottom: 5px;
+            border-radius: 50%; /* 增加基础圆形裁剪 */
             filter: drop-shadow(0 0 15px rgba(217, 119, 6, 0.6));
             -webkit-mask-image: radial-gradient(circle at center, black 45%, transparent 70%);
             mask-image: radial-gradient(circle at center, black 45%, transparent 70%);
         }
+        
         .title { color: #D97706; font-size: 16px; letter-spacing: 2px; margin: 0; font-weight: 600; }
         .lab-title { color: #F59E0B; font-size: 32px; font-weight: 900; letter-spacing: 4px; margin: 5px 0; text-shadow: 0 0 20px rgba(217, 119, 6, 0.6); }
         .subtitle { color: #93C5FD; font-size: 13px; opacity: 0.8; text-align: center;}
@@ -57,7 +58,7 @@
             border-radius: 8px; color: #FDE68A; font-size: 14px; text-align: center; appearance: none; outline: none;
         }
 
-        /* --- 按钮 (醒目金色渐变) --- */
+        /* --- 按钮 --- */
         .submit-btn {
             width: 100%; padding: 16px; margin-top: 10px; border-radius: 10px; border: none;
             background: linear-gradient(135deg, #D97706, #b45309); color: #fff;
@@ -99,13 +100,19 @@
             padding: 25px 20px; box-sizing: border-box;
         }
         
-        /* 核心修复：海报浮层 1:1 完美复刻首页的藏青半透明毛玻璃颜色与质感 */
+        /* 🔥 终极修复 1：海报浮层颜色。采用高浓度藏青色，屏蔽底层橘光，强制与首页色彩完美一致 */
         .poster-glass-card {
-            background-color: rgba(10, 15, 30, 0.75); 
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            background-color: rgba(10, 15, 30, 0.98); /* 极高浓度藏青色，解决截图发橘发黄的问题 */
             border-radius: 20px; padding: 30px 25px; box-sizing: border-box;
             border: 1px solid rgba(217, 119, 6, 0.4);
             box-shadow: 0 0 30px rgba(37, 99, 235, 0.3), inset 0 0 10px rgba(217, 119, 6, 0.2);
+        }
+
+        /* 🔥 终极修复 2：海报专属 Logo。强制切圆，解决截图变方块和贴片感的问题 */
+        .poster-logo-img {
+            width: 120px; height: 120px; object-fit: cover; margin-bottom: 5px;
+            border-radius: 50%; /* 强制裁切成正圆，不再有生硬方形边缘 */
+            background-color: #0a0f1e; /* 填补透明缝隙，完美融合藏青底色 */
         }
         
         .poster-section-title { color: #F59E0B; font-weight: bold; margin: 18px 0 8px 0; font-size: 15px; }
@@ -131,7 +138,7 @@
     <div id="poster-template">
         <div class="poster-glass-card">
             <div style="text-align:center;">
-                <img src="logo.jpg" class="logo-img">
+                <img src="logo.jpg" class="poster-logo-img">
                 <div style="color:#D97706; font-size:18px; margin-top:5px; font-weight: bold; letter-spacing: 2px;">Mia妙言 · 玄学实验室</div>
             </div>
             
@@ -144,13 +151,10 @@
             <div>
                 <div class="poster-section-title">💻 底层代码</div>
                 <div class="poster-section-content highlight-text" id="post-core">-</div>
-                
                 <div class="poster-section-title">🔮 外在全息投影</div>
                 <div class="poster-section-content" id="post-aura">-</div>
-                
                 <div class="poster-section-title">⚙️ 内核算法</div>
                 <div class="poster-section-content" id="post-inner">-</div>
-                
                 <div class="poster-section-title">🎭 多元宇宙角色</div>
                 <div class="poster-section-content" id="post-roles">-</div>
             </div>
@@ -220,7 +224,6 @@
     </div>
 
     <script>
-        // 1. 初始化日期：代码已修复，下拉框现在可以正常选择年月日了！
         const ys=document.getElementById('year'), ms=document.getElementById('month'), ds=document.getElementById('day');
         const cy=new Date().getFullYear();
         for(let i=cy;i>=1930;i--) ys.add(new Option(i+'年',i));
@@ -228,10 +231,8 @@
         for(let i=1;i<=31;i++) ds.add(new Option(i+'日',i));
         ys.value=1995; ms.value=6; ds.value=15;
 
-        // 初始化二维码
         new QRCode(document.getElementById("qrcode"), { text: "https://www.mia-xuanxue.fun", width: 75, height: 75, colorDark : "#000000", colorLight : "#ffffff" });
 
-        // 2. 赛博科技玄学版字典（安全无bug数组写法）
         const archetypes = [
             { stem: "甲木", tag: "The Oak · 创世架构师", core: "破土而出的第一行代码，自带向上生长的破局之力与绝对的系统主导权。", aura: "骨架舒展，身形挺拔；眼神坚定，走路带风。出场自带“主角光环”与正气感。", inner: "<ul><li><strong>目标锁定：</strong>野心与担当并存，认准方向就不回头。</li><li><strong>直筒逻辑：</strong>正直坦荡，宁折不弯，拒绝无效的弯弯绕绕。</li><li><strong>抗压满格：</strong>压力越大，生长的势能越强。</li></ul>", roles: "<strong>古代/现代职场：</strong>开国君主 / 独角兽CEO、行业标准制定者<br><strong>团队定位：</strong>决策引擎、方向指引者<br><strong>社交/恋爱：</strong>靠谱大哥(大姐) / 强势守护型", celebs: "埃隆·马斯克 (科技)、刘涛 (演艺)、岳飞 (历史)" },
             { stem: "乙木", tag: "The Vine · 生态连接者", core: "蜿蜒生长的柔性网络，极其敏锐的节点感知力，能将孤立的数据编织成生态系统。", aura: "线条流畅细腻，气质柔和温婉；穿搭品味极佳，自带高级的文艺氛围场。", inner: "<ul><li><strong>高频共情：</strong>情绪读取能力满分，懂迁就、会照顾人。</li><li><strong>曲线救国：</strong>韧性极强，能屈能伸，用柔软的身段解决硬冲突。</li><li><strong>审美天赋：</strong>艺术感与细节捕捉能力天生在线。</li></ul>", roles: "<strong>古代/现代职场：</strong>才女谋士 / 社区生态总监、跨界公关<br><strong>团队定位：</strong>超级粘合剂、创意氛围组<br><strong>社交/恋爱：</strong>暖心知己 / 情绪价值提供机", celebs: "奥黛丽·赫本 (演艺)、胡歌 (演艺)、林徽因 (文化)" },
