@@ -213,7 +213,22 @@
             </div>
             <div class="form-group">
                 <label>出生时辰 (可选)</label>
-                <select id="birthTime"><option value="unknown">未知时辰 (跳过)</option><option value="zi">子时 (23:00-01:00)</option><option value="chou">丑时 (01:00-03:00)</option><option value="yin">寅时 (03:00-05:00)</option><option value="mao">卯时 (05:00-07:00)</option><option value="chen">辰时 (07:00-09:00)</option><option value="si">巳时 (09:00-11:00)</option><option value="wu">午时 (11:00-13:00)</option><option value="wei">未时 (13:00-15:00)</option><option value="shen">申时 (15:00-17:00)</option><option value="you">酉时 (17:00-19:00)</option><option value="xu">戌时 (19:00-21:00)</option><option value="hai">亥时 (21:00-23:00)</option></select>
+                <select id="birthTime">
+                    <option value="unknown">未知时辰 (跳过)</option>
+                    <option value="late_zi">晚子时 (23:00-23:59) *按次日算*</option>
+                    <option value="early_zi">早子时 (00:00-00:59)</option>
+                    <option value="chou">丑时 (01:00-03:00)</option>
+                    <option value="yin">寅时 (03:00-05:00)</option>
+                    <option value="mao">卯时 (05:00-07:00)</option>
+                    <option value="chen">辰时 (07:00-09:00)</option>
+                    <option value="si">巳时 (09:00-11:00)</option>
+                    <option value="wu">午时 (11:00-13:00)</option>
+                    <option value="wei">未时 (13:00-15:00)</option>
+                    <option value="shen">申时 (15:00-17:00)</option>
+                    <option value="you">酉时 (17:00-19:00)</option>
+                    <option value="xu">戌时 (19:00-21:00)</option>
+                    <option value="hai">亥时 (21:00-23:00)</option>
+                </select>
             </div>
             <button class="submit-btn" onclick="startDataParsing()">⚡ 注入算力 · 解码底层剧本</button>
         </div>
@@ -290,14 +305,22 @@
             { stem: "癸水", tag: "The Dew · 幽灵观察者", core: "悄无声息的隐形数据流，能够穿透任何防火墙，拥有系统内最强的情绪算力和直觉。", aura: "清冷干净，身形偏纤细；眼神清澈但极其内敛，给人一种安静、神秘且高级的感觉。", inner: "<ul><li><strong>情绪黑客：</strong>直觉力与敏感度惊人，能一眼看透人性和底层动机。</li><li><strong>柔性渗透：</strong>低调不张扬，外柔内刚，最擅长迂回包抄达成目的。</li><li><strong>深谋远虑：</strong>走一步算十步的幕后策略家。</li></ul>", roles: "古代/现代职场：幕后隐士 / 首席数据分析师、潜意识心理学家<br>团队定位：影子智囊团、信息处理中枢<br>社交/恋爱：终极树洞 / 温柔试探型", celebs: "刘亦菲 (演艺)、基努·里维斯 (演艺)、阿兰·图灵 (科技)" }
         ];
 
-        // 解析逻辑（加入容错保护）
+        // 解析逻辑（加入早晚子时容错保护）
         function startDataParsing() {
             try {
                 const y = parseInt(ys.value);
                 const m = parseInt(ms.value);
                 const d = parseInt(ds.value);
+                const timeSlot = document.getElementById('birthTime').value;
                 
-                const targetDate = new Date(y, m - 1, d);
+                let targetDate = new Date(y, m - 1, d);
+                
+                // 🌟 升级点 2：物理跨越，晚子时自动换日计算能量
+                if (timeSlot === 'late_zi') {
+                    // 如果是晚子时（23点后），日历时间自动加 1 天
+                    targetDate.setDate(targetDate.getDate() + 1);
+                }
+
                 const baseDate = new Date(2024, 0, 1); 
                 const diffDays = Math.floor((targetDate - baseDate) / 86400000);
                 
