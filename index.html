@@ -554,6 +554,8 @@
                 document.getElementById('res-aura').innerText = result.aura;
                 document.getElementById('res-inner').innerHTML = result.inner;
                 document.getElementById('res-roles').innerHTML = result.roles;
+                // 🌟 修复：补回名人共振卡片的渲染逻辑
+                document.getElementById('res-celebs').innerText = result.celebs;
 
                 // ⚡ 绘制五行雷达图 (伪装数据待替换)
                 renderRadarChart([25, 15, 40, 10, 10]);
