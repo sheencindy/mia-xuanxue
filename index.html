@@ -2,15 +2,14 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-E3RY2051QD"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-E3RY2051QD"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-E3RY2051QD');
+    </script>
 
-  gtag('config', 'G-E3RY2051QD');
-</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mia妙言 - 玄学实验室</title>
 
@@ -20,9 +19,6 @@
     <meta property="og:image" content="https://www.mia-xuanxue.fun/bg.jpg">
     <meta property="og:url" content="https://www.mia-xuanxue.fun/">
 
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -106,25 +102,6 @@
         .card-content strong { color: #FCD34D; }
         .highlight-text { color: #60A5FA; font-weight: 500; }
 
-<div class="data-card">
-                <div class="card-title">🎭 多元宇宙角色 (Multiverse Roles)</div>
-                <div class="card-content" id="res-roles">加载中...</div>
-            </div>
-            
-            <div class="data-card">
-                <div class="card-title">📊 能量矩阵分布 (Energy Matrix)</div>
-                <div style="position: relative; height:250px; width:100%; display: flex; justify-content: center;">
-                    <canvas id="energyRadar"></canvas>
-                </div>
-            </div>
-            <div class="data-card" style="margin-bottom: 25px;">
-                <div class="card-title">🌟 能量共振样本 (Resonance)</div>
-                <div class="card-content" id="res-celebs">加载中...</div>
-            </div>
-
-
-
-        
         /* --- 海报预览/生成层 --- */
         #poster-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -288,6 +265,14 @@
                 <div class="card-title">🎭 多元宇宙角色 (Multiverse Roles)</div>
                 <div class="card-content" id="res-roles">加载中...</div>
             </div>
+            
+            <div class="data-card">
+                <div class="card-title">📊 能量矩阵分布 (Energy Matrix)</div>
+                <div style="position: relative; height:250px; width:100%; display: flex; justify-content: center;">
+                    <canvas id="energyRadar"></canvas>
+                </div>
+            </div>
+
             <div class="data-card" style="margin-bottom: 25px;">
                 <div class="card-title">🌟 能量共振样本 (Resonance)</div>
                 <div class="card-content" id="res-celebs">加载中...</div>
@@ -337,69 +322,7 @@
             { stem: "癸水", tag: "The Dew · 幽灵观察者", core: "悄无声息的隐形数据流，能够穿透任何防火墙，拥有系统内最强的情绪算力和直觉。", aura: "清冷干净，身形偏纤细；眼神清澈但极其内敛，给人一种安静、神秘且高级的感觉。", inner: "<ul><li><strong>情绪黑客：</strong>直觉力与敏感度惊人，能一眼看透人性和底层动机。</li><li><strong>柔性渗透：</strong>低调不张扬，外柔内刚，最擅长迂回包抄达成目的。</li><li><strong>深谋远虑：</strong>走一步算十步的幕后策略家。</li></ul>", roles: "古代/现代职场：幕后隐士 / 首席数据分析师、潜意识心理学家<br>团队定位：影子智囊团、信息处理中枢<br>社交/恋爱：终极树洞 / 温柔试探型", celebs: "刘亦菲 (演艺)、基努·里维斯 (演艺)、阿兰·图灵 (科技)" }
         ];
 
-        // 解析逻辑（加入早晚子时容错保护）
-        function startDataParsing() {
-            try {
-                const y = parseInt(ys.value);
-                const m = parseInt(ms.value);
-                const d = parseInt(ds.value);
-                const timeSlot = document.getElementById('birthTime').value;
-                
-                let targetDate = new Date(y, m - 1, d);
-                
-                // 🌟 升级点 2：物理跨越，晚子时自动换日计算能量
-                if (timeSlot === 'late_zi') {
-                    // 如果是晚子时（23点后），日历时间自动加 1 天
-                    targetDate.setDate(targetDate.getDate() + 1);
-                }
-
-                const baseDate = new Date(2024, 0, 1); 
-                const diffDays = Math.floor((targetDate - baseDate) / 86400000);
-                
-                let stemIndex = diffDays % 10; 
-                if (stemIndex < 0) stemIndex += 10; 
-                
-                const result = archetypes[stemIndex];
-
-                // 切换页面
-                document.getElementById('input-screen').style.display = 'none';
-                document.getElementById('result-screen').style.display = 'block';
-
-                // 注入 UI 面板数据
-                document.getElementById('res-name').innerText = result.stem;
-                document.getElementById('res-tag').innerText = result.tag;
-                document.getElementById('res-core').innerText = result.core;
-                document.getElementById('res-aura').innerText = result.aura;
-                document.getElementById('res-inner').innerHTML = result.inner;
-                document.getElementById('res-roles').innerHTML = result.roles;
-                document.getElementById('res-celebs').innerText = result.celebs;
-
-                // 绘制雷达图 (目前先用一组演示数据，马上替换真实算法)
-                // 顺序：金、水、木、火、土
-                renderRadarChart([15, 20, 45, 10, 10]);
-
-                // 注入海报模板数据
-                document.getElementById('post-name').innerText = result.stem;
-                document.getElementById('post-tag').innerText = result.tag;
-                document.getElementById('post-core').innerText = result.core;
-                document.getElementById('post-aura').innerText = result.aura;
-                document.getElementById('post-inner').innerHTML = result.inner;
-                document.getElementById('post-roles').innerHTML = result.roles;
-                
-                // 回顶部
-                document.getElementById('mainContainer').scrollTop = 0;
-            } catch (error) {
-                console.error("解析过程中出现错误：", error);
-                alert("由于数据读取错误，未能成功解析。请刷新页面重试。");
-            }
-        }
-
-        function returnToInput() {
-            document.getElementById('result-screen').style.display = 'none';
-            document.getElementById('input-screen').style.display = 'block';
-            document.getElementById('mainContainer').scrollTop = 0;
-        }
-// 📊 全局变量：存储雷达图实例
+        // 📊 全局变量：存储雷达图实例
         let radarChartInstance = null;
 
         // 🎨 核心功能：绘制赛博风五行雷达图
@@ -417,7 +340,7 @@
                     labels: ['金 (Metal)', '水 (Water)', '木 (Wood)', '火 (Fire)', '土 (Earth)'], // 按照五行相生顺序
                     datasets: [{
                         label: '能量占比 (%)',
-                        data: energyData, // 这里接收传进来的数组，比如 [20, 15, 45, 10, 10]
+                        data: energyData, // 接收真实传进来的数组数据
                         backgroundColor: 'rgba(217, 119, 6, 0.25)', // 半透明的赛博金底色
                         borderColor: '#F59E0B', // 高亮金色边框
                         borderWidth: 2,
@@ -456,11 +379,79 @@
             });
         }
 
+        // 解析逻辑（加入早晚子时容错保护）
+        function startDataParsing() {
+            try {
+                const y = parseInt(ys.value);
+                const m = parseInt(ms.value);
+                const d = parseInt(ds.value);
+                const timeSlot = document.getElementById('birthTime').value;
+                
+                let targetDate = new Date(y, m - 1, d);
+                
+                // 🌟 升级点 2：物理跨越，晚子时自动换日计算能量
+                if (timeSlot === 'late_zi') {
+                    targetDate.setDate(targetDate.getDate() + 1);
+                }
 
+                const baseDate = new Date(2024, 0, 1); 
+                const diffDays = Math.floor((targetDate - baseDate) / 86400000);
+                
+                let stemIndex = diffDays % 10; 
+                if (stemIndex < 0) stemIndex += 10; 
+                
+                const result = archetypes[stemIndex];
 
+                // 切换页面
+                document.getElementById('input-screen').style.display = 'none';
+                document.getElementById('result-screen').style.display = 'block';
+
+                // 注入 UI 面板数据
+                document.getElementById('res-name').innerText = result.stem;
+                document.getElementById('res-tag').innerText = result.tag;
+                document.getElementById('res-core').innerText = result.core;
+                document.getElementById('res-aura').innerText = result.aura;
+                document.getElementById('res-inner').innerHTML = result.inner;
+                document.getElementById('res-roles').innerHTML = result.roles;
+                document.getElementById('res-celebs').innerText = result.celebs;
+
+                // ⚡ 绘制五行雷达图 (这里先用一组伪装数据点亮皮肤，等待真实算法接入)
+                // 顺序：金、水、木、火、土
+                renderRadarChart([25, 15, 40, 10, 10]);
+
+                // 注入海报模板数据
+                document.getElementById('post-name').innerText = result.stem;
+                document.getElementById('post-tag').innerText = result.tag;
+                document.getElementById('post-core').innerText = result.core;
+                document.getElementById('post-aura').innerText = result.aura;
+                document.getElementById('post-inner').innerHTML = result.inner;
+                document.getElementById('post-roles').innerHTML = result.roles;
+                
+                // 回顶部
+                document.getElementById('mainContainer').scrollTop = 0;
+            } catch (error) {
+                console.error("解析过程中出现错误：", error);
+                alert("由于数据读取错误，未能成功解析。请刷新页面重试。");
+            }
+        }
+
+        function returnToInput() {
+            document.getElementById('result-screen').style.display = 'none';
+            document.getElementById('input-screen').style.display = 'block';
+            document.getElementById('mainContainer').scrollTop = 0;
+        }
         
-        // 📸 核心功能：生成海报图片
+        // 📸 核心功能：生成海报图片与埋点
         async function generatePoster() {
+            // --- 💡 向 Google Analytics 发送海报生成事件（精确埋点） ---
+            if (typeof gtag === 'function') {
+                gtag('event', 'generate_poster_click', {
+                    'event_category': 'engagement',
+                    'event_label': 'cyber_bazi_poster'
+                });
+            }
+            // ------------------------------------------------
+
             document.getElementById('loading-overlay').style.display='flex'; 
             const template = document.getElementById('poster-template');
             
