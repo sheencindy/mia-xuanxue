@@ -487,12 +487,27 @@
 
                 const trueY = trueTargetDate.getFullYear(); const trueM = trueTargetDate.getMonth() + 1; const trueD = trueTargetDate.getDate();
 
-                // 🌟 使用 lunar-javascript 提取精确八字 (原生支持23点晚子时物理跨越)
-                const lunarDate = Lunar.fromDate(trueTargetDate);
+               
+                // 🌟 核心修复：早晚子时与换日判定（绝对对齐“主流换日派”：23点直接进位）
+                let finalLunarDate = new Date(trueTargetDate.getTime());
+                if (trueH === 23) {
+                    finalLunarDate.setDate(finalLunarDate.getDate() + 1); // 物理跨越：加1天
+                    finalLunarDate.setHours(0); // 算法欺骗：强行重置为早子时，迫使引擎输出第二天的日柱
+                }
+
+                // 计算十维原型索引
+                const utcCalc = Date.UTC(finalLunarDate.getFullYear(), finalLunarDate.getMonth(), finalLunarDate.getDate());
+                const utcBase = Date.UTC(2024, 0, 1); 
+                const diffDays = Math.floor((utcCalc - utcBase) / 86400000);
+                
+                let stemIndex = diffDays % 10; 
+                if (stemIndex < 0) stemIndex += 10; 
+                const result = archetypes[stemIndex];
+
+                // 🌟 使用 lunar-javascript 提取精确八字 (喂入换日校准后的时间)
+                const lunarDate = Lunar.fromDate(finalLunarDate);
                 const bazi = lunarDate.getEightChar();
                 
-                const stems = [bazi.getYearGan(), bazi.getMonthGan(), bazi.getDayGan(), bazi.getTimeGan()];
-                const branches = [bazi.getYearZhi(), bazi.getMonthZhi(), bazi.getDayZhi(), bazi.getTimeZhi()];
                 
                 // 提取日干作为核心能量原型
                 const stemArchetypeMap = { "甲": 0, "乙": 1, "丙": 2, "丁": 3, "戊": 4, "己": 5, "庚": 6, "辛": 7, "壬": 8, "癸": 9 };
