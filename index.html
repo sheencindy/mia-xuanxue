@@ -487,7 +487,6 @@
 
                 const trueY = trueTargetDate.getFullYear(); const trueM = trueTargetDate.getMonth() + 1; const trueD = trueTargetDate.getDate();
 
-               
                 // 🌟 核心修复：早晚子时与换日判定（绝对对齐“主流换日派”：23点直接进位）
                 let finalLunarDate = new Date(trueTargetDate.getTime());
                 if (trueH === 23) {
@@ -502,12 +501,13 @@
                 
                 let stemIndex = diffDays % 10; 
                 if (stemIndex < 0) stemIndex += 10; 
-                const result = archetypes[stemIndex];
 
                 // 🌟 使用 lunar-javascript 提取精确八字 (喂入换日校准后的时间)
                 const lunarDate = Lunar.fromDate(finalLunarDate);
                 const bazi = lunarDate.getEightChar();
                 
+                const stems = [bazi.getYearGan(), bazi.getMonthGan(), bazi.getDayGan(), bazi.getTimeGan()];
+                const branches = [bazi.getYearZhi(), bazi.getMonthZhi(), bazi.getDayZhi(), bazi.getTimeZhi()];
                 
                 // 提取日干作为核心能量原型
                 const stemArchetypeMap = { "甲": 0, "乙": 1, "丙": 2, "丁": 3, "戊": 4, "己": 5, "庚": 6, "辛": 7, "壬": 8, "癸": 9 };
