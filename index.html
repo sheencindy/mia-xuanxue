@@ -20,6 +20,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         /* --- 基础样式 (全局毛玻璃包裹) --- */
@@ -57,6 +58,7 @@
         /* --- 输入页 --- */
         .form-group { margin-bottom: 15px; }
         label { display: block; color: #FCD34D; font-size: 14px; margin-bottom: 8px; font-weight: 500; }
+        label span.optional { color: #93C5FD; font-size: 12px; font-weight: normal; margin-left: 5px;}
         label span.required { color: #2563EB; text-shadow: 0 0 5px rgba(37, 99, 235, 0.8); }
         .date-inputs { display: flex; gap: 8px; }
         select {
@@ -66,10 +68,16 @@
         }
         select:focus { border-color: #F59E0B; }
         option { background-color: #0a0f1e; color: #FDE68A; }
+        
+        .disclaimer-text {
+            font-size: 11.5px; color: #93C5FD; opacity: 0.85; margin-top: -5px; margin-bottom: 20px; 
+            line-height: 1.5; background: rgba(37, 99, 235, 0.1); padding: 10px; border-radius: 8px;
+            border-left: 3px solid #F59E0B;
+        }
 
         /* --- 核心按钮 (金色渐变) --- */
         .submit-btn {
-            width: 100%; padding: 16px; margin-top: 15px; border-radius: 10px; border: none;
+            width: 100%; padding: 16px; margin-top: 10px; border-radius: 10px; border: none;
             background: linear-gradient(135deg, #D97706, #b45309); color: #fff;
             font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4);
             transition: all 0.2s;
@@ -206,40 +214,32 @@
                 <h1 class="lab-title">玄学实验室</h1>
                 <div class="subtitle">天文级底层剧本解析系统</div>
             </div>
+            
             <div class="form-group">
                 <label>公历出生日期 <span class="required">*</span></label>
                 <div class="date-inputs"><select id="year"></select><select id="month"></select><select id="day"></select></div>
             </div>
+            
             <div class="form-group">
-                <label>出生时间 (精确到分) <span class="required">*</span></label>
+                <label>出生时间 <span class="optional">(选填)</span></label>
                 <div class="date-inputs">
-                    <select id="hour"></select>
-                    <select id="minute"></select>
+                    <select id="hour"><option value="unknown">未知时辰 (跳过)</option></select>
+                    <select id="minute"><option value="unknown">未知分 (跳过)</option></select>
                 </div>
             </div>
+            
             <div class="form-group">
-                <label>出生地点 (用于校准真太阳时) <span class="required">*</span></label>
-                <select id="birthPlace">
-                    <option value="116.40">北京 (116.4°E)</option>
-                    <option value="121.47">上海 (121.4°E)</option>
-                    <option value="113.26">广东·广州 (113.2°E)</option>
-                    <option value="114.05">广东·深圳 (114.0°E)</option>
-                    <option value="120.15">浙江·杭州 (120.1°E)</option>
-                    <option value="118.78">江苏·南京 (118.7°E)</option>
-                    <option value="104.06">四川·成都 (104.0°E)</option>
-                    <option value="106.50">重庆 (106.5°E)</option>
-                    <option value="114.31">湖北·武汉 (114.3°E)</option>
-                    <option value="108.95">陕西·西安 (108.9°E)</option>
-                    <option value="113.62">河南·郑州 (113.6°E)</option>
-                    <option value="117.00">山东·济南 (117.0°E)</option>
-                    <option value="119.30">福建·福州 (119.3°E)</option>
-                    <option value="115.89">江西·南昌 (115.8°E)</option>
-                    <option value="114.68" selected>江西·分宜 (114.6°E) - 测试点</option>
-                    <option value="123.43">辽宁·沈阳 (123.4°E)</option>
-                    <option value="87.68">新疆·乌鲁木齐 (87.6°E)</option>
-                    <option value="120.00">未知/海外 (默认不校准经度)</option>
-                </select>
+                <label>出生地点 <span class="optional">(用于校准真太阳时)</span></label>
+                <div class="date-inputs">
+                    <select id="prov" onchange="updateCity()"></select>
+                    <select id="city"></select>
+                </div>
             </div>
+
+            <div class="disclaimer-text">
+                💡 <b>数据节点提示：</b>若「出生时辰」或「坐标地点」缺失，系统将自动切入降级运算模式（默认调用北京坐标及正午时段进行推演）。由于缺乏真太阳时天文级校准，底层能量代码可能产生微小折叠，解析结果仅供赛博娱乐与灵感参考。
+            </div>
+
             <button class="submit-btn" onclick="startDataParsing()">⚡ 注入算力 · 解码底层剧本</button>
         </div>
 
@@ -270,6 +270,14 @@
                 <div class="card-title">🎭 多元宇宙角色 (Multiverse Roles)</div>
                 <div class="card-content" id="res-roles">加载中...</div>
             </div>
+            
+            <div class="data-card">
+                <div class="card-title">📊 能量矩阵分布 (Energy Matrix)</div>
+                <div style="position: relative; height:250px; width:100%; display: flex; justify-content: center;">
+                    <canvas id="energyRadar"></canvas>
+                </div>
+            </div>
+
             <div class="data-card" style="margin-bottom: 25px;">
                 <div class="card-title">🌟 能量共振样本 (Resonance)</div>
                 <div class="card-content" id="res-celebs">加载中...</div>
@@ -283,7 +291,7 @@
     </div>
 
     <script>
-        // 初始化下拉框选项
+        // --- 1. 初始化基础日期时间选项 ---
         const ys = document.getElementById('year');
         const ms = document.getElementById('month');
         const ds = document.getElementById('day');
@@ -298,37 +306,103 @@
         for (let i = 0; i <= 23; i++) { hs.add(new Option(i.toString().padStart(2, '0') + ' 时', i)); }
         for (let i = 0; i <= 59; i++) { mins.add(new Option(i.toString().padStart(2, '0') + ' 分', i)); }
         
-        // 默认你的测试用例
-        ys.value = "1983";
-        ms.value = "7";
-        ds.value = "24";
-        hs.value = "0";
-        mins.value = "20";
+        ys.value = "1995";
+        ms.value = "6";
+        ds.value = "15";
+
+        // --- 2. 城市多级联动数据源 ---
+        const geoData = {
+            "未知地点 (跳过)": { "默认系统中心 (116.4°E)": 116.40 },
+            "中国·北京": { "北京市": 116.40 },
+            "中国·上海": { "上海市": 121.47 },
+            "中国·广东": { "广州市": 113.26, "深圳市": 114.05, "东莞市": 113.75, "佛山市": 113.12 },
+            "中国·浙江": { "杭州市": 120.15, "宁波市": 121.55, "温州市": 120.69 },
+            "中国·江苏": { "南京市": 118.78, "苏州市": 120.58, "无锡市": 120.29 },
+            "中国·四川": { "成都市": 104.06, "绵阳市": 104.73 },
+            "中国·重庆": { "重庆市": 106.50 },
+            "中国·湖北": { "武汉市": 114.31, "宜昌市": 111.28 },
+            "中国·陕西": { "西安市": 108.95 },
+            "中国·河南": { "郑州市": 113.62, "洛阳市": 112.43 },
+            "中国·山东": { "济南市": 117.00, "青岛市": 120.33 },
+            "中国·福建": { "福州市": 119.30, "厦门市": 118.08 },
+            "中国·江西": { "南昌市": 115.89, "赣州市": 114.93, "九江市": 115.97, "上饶市": 117.97 },
+            "中国·辽宁": { "沈阳市": 123.43, "大连市": 121.62 },
+            "中国·新疆": { "乌鲁木齐市": 87.68 },
+            "全球·海外": { "北美·纽约": -74.00, "北美·洛杉矶": -118.24, "欧洲·伦敦": -0.12, "欧洲·巴黎": 2.35, "澳洲·悉尼": 151.20, "亚洲·东京": 139.69 }
+        };
+
+        const provSelect = document.getElementById('prov');
+        const citySelect = document.getElementById('city');
+
+        // 填充省份/国家
+        for (let p in geoData) {
+            provSelect.add(new Option(p, p));
+        }
+
+        // 更新城市/区县逻辑
+        function updateCity() {
+            const p = provSelect.value;
+            citySelect.innerHTML = ''; // 清空
+            for (let c in geoData[p]) {
+                citySelect.add(new Option(c, geoData[p][c]));
+            }
+        }
+        
+        // 初始加载地理位置
+        provSelect.value = "未知地点 (跳过)";
+        updateCity();
 
         // 初始化二维码
         try {
             new QRCode(document.getElementById("qrcode"), { 
                 text: "https://www.mia-xuanxue.fun", width: 75, height: 75, colorDark : "#000000", colorLight : "#ffffff" 
             });
-        } catch (e) {
-            console.error("二维码生成失败:", e);
-        }
+        } catch (e) { console.error("二维码生成:", e); }
 
         // 数据字典：纯正赛博科技玄学版
         const archetypes = [
-            { stem: "甲木", tag: "The Oak · 创世架构师", core: "破土而出的第一行代码，自带向上生长的破局之力与绝对的系统主导权。", aura: "骨架舒展，身形挺拔；眼神坚定，走路带风。出场自带“主角光环”与正气感。", inner: "<ul><li><strong>目标锁定：</strong>野心与担当并存，认准方向就不回头。</li><li><strong>直筒逻辑：</strong>正直坦荡，宁折不弯，拒绝无效的弯弯绕绕。</li><li><strong>抗压满格：</strong>压力越大，生长的势能越强。</li></ul>", roles: "古代/现代职场：开国君主 / 独角兽CEO、行业标准制定者<br>团队定位：决策引擎、方向指引者<br>社交/恋爱：靠谱大哥(大姐) / 强势守护型", celebs: "埃隆·马斯克 (科技)、刘涛 (演艺)、岳飞 (历史)" },
-            { stem: "乙木", tag: "The Vine · 生态连接者", core: "蜿蜒生长的柔性网络，极其敏锐的节点感知力，能将孤立的数据编织成生态系统。", aura: "线条流畅细腻，气质柔和温婉；穿搭品味极佳，自带高级的文艺氛围场。", inner: "<ul><li><strong>高频共情：</strong>情绪读取能力满分，懂迁就、会照顾人。</li><li><strong>曲线救国：</strong>韧性极强，能屈能伸，用柔软的身段解决硬冲突。</li><li><strong>审美天赋：</strong>艺术感与细节捕捉能力天生在线。</li></ul>", roles: "古代/现代职场：才女谋士 / 社区生态总监、跨界公关<br>团队定位：超级粘合剂、创意氛围组<br>社交/恋爱：暖心知己 / 情绪价值提供机", celebs: "奥黛丽·赫本 (演艺)、胡歌 (演艺)、林徽因 (文化)" },
-            { stem: "丙火", tag: "The Sun · 核心发光体", core: "系统中的恒星级能源，持续输出高燃热量，自带强大的辐射场与开源布道能力。", aura: "气色红润，笑容明亮；眼神有光，气场极致外放，走到哪都是聚光灯的中心。", inner: "<ul><li><strong>高燃输出：</strong>外向开朗，真诚直接，讨厌阴暗面。</li><li><strong>情绪感染：</strong>极强的煽动性与带动感，能瞬间点燃全场。</li><li><strong>慷慨开源：</strong>讲义气，乐于分享能量与资源。</li></ul>", roles: "古代/现代职场：盛世帝王 / 头部主播、明星演讲者<br>团队定位：破冰先锋、绝对气氛担当<br>社交/恋爱：聚会灵魂 / 浪漫直球型", celebs: "莱昂纳多(小李子) (演艺)、谢娜 (主持)、李白 (历史)" },
-            { stem: "丁火", tag: "The Star · 灵感启明者", core: "黑夜中的高亮像素，数据盲区里的探照灯；能量不大但穿透力极强，专攻底层逻辑。", aura: "气质温柔有灵气，眼神深邃；自带柔光滤镜，舒服不刺眼，越看越有味道。", inner: "<ul><li><strong>深度洞察：</strong>情感细腻，能看透事物表象直击灵魂。</li><li><strong>极致专注：</strong>有自己独立运行的小世界，执着且持久。</li><li><strong>外柔内刚：</strong>看似温和，但底层有极其坚固的安全协议。</li></ul>", roles: "古代/现代职场：隐世谋士 / AI提示词工程师、深度调查记者<br>团队定位：灵感火花塞、走心分析师<br>社交/恋爱：温柔树洞 / 精神共振型", celebs: "泰勒·斯威夫特 (音乐)、周杰伦 (音乐)、貂蝉 (历史)" },
-            { stem: "戊土", tag: "The Mountain · 矩阵压舱石", core: "承载万亿参数的物理服务器集群，系统中最厚重、最可靠的防御与存储基石。", aura: "身形偏厚实稳重，面容端正；没有攻击性，但给人一种“这人能扛事”的绝对信任感。", inner: "<ul><li><strong>绝对稳健：</strong>诚信务实，行动胜于雄辩，讨厌虚假数据。</li><li><strong>海量包容：</strong>宽容度极高，能承载巨大的压力与复杂情绪。</li><li><strong>长期主义：</strong>传统保守，追求终极的安全感与系统稳定。</li></ul>", roles: "古代/现代职场：镇国宰相 / 基础设施架构师、合规高管<br>团队定位：定海神针、最后一道防线<br>社交/恋爱：最靠谱后盾 / 踏实契约型", celebs: "沃伦·巴菲特 (投资)、董明珠 (商业)、安格拉·默克尔 (政治)" },
-            { stem: "己土", tag: "The Garden · 算法培育者", core: "拥有超级收纳能力与孵化环境的田园数据库；擅长整理冗杂信息，滋养初创项目。", aura: "温婉柔和，皮肤细腻；气质干净舒服，像微风一样没有压迫感，亲和力拉满。", inner: "<ul><li><strong>极致服务：</strong>细心体贴，擅长察觉并照顾系统的每一个微小进程。</li><li><strong>低调务实：</strong>不争抢算力，默默付出，在后台维持运转。</li><li><strong>高效整理：</strong>收纳整理、规划统筹能力一流。</li></ul>", roles: "古代/现代职场：悬壶医女 / 首席人力资源(CHRO)、用户运营<br>团队定位：后勤大总管、超级辅助与润滑剂<br>社交/恋爱：贴心大管家 / 无微不至型", celebs: "凯特王妃 (皇室)、黄磊 (演艺)、特蕾莎修女 (慈善)" },
-            { stem: "庚金", tag: "The Sword · 破局终结者", core: "拥有最高执行权限的杀毒软件与改革指令；硬核、锋利，最擅长在混乱中重构秩序。", aura: "五官立体锋利，眼神犀利；气场冷冽高级，散发着一种“少惹我但很公正”的压迫感。", inner: "<ul><li><strong>极简杀伐：</strong>果断直接，讨厌拖泥带水，执行力拉满。</li><li><strong>非黑即白：</strong>极度讲求原则与逻辑，不畏强权，不讲人情。</li><li><strong>钢铁意志：</strong>抗压极强，属于“不破不立”的改革派。</li></ul>", roles: "古代/现代职场：铁血武将 / 危机公关、重构工程师<br>团队定位：核心战斗力、系统纠错者<br>社交/恋爱：敢说真话的诤友 / 直率硬核型", celebs: "克里斯蒂亚诺·罗纳尔多(C罗)、那英 (音乐)、关羽 (历史)" },
-            { stem: "辛金", tag: "The Jade · 像素级雕琢者", core: "经过千万次迭代打磨的顶级UI界面；对精度、品质和美感有着近乎代码般苛刻的要求。", aura: "精致优雅，五官小巧；自带清冷的贵气与距离感，低调奢华，拒绝粗糙。", inner: "<ul><li><strong>完美主义：</strong>细节控晚期，对瑕疵零容忍。</li><li><strong>高阶审美：</strong>品味极佳，追求精神与物质的双重高级感。</li><li><strong>外冷内热：</strong>傲娇毒舌但心软，极其注重个人的体面与尊严。</li></ul>", roles: "古代/现代职场：绝代贵妃 / 奢侈品主理人、算法调优专家<br>团队定位：品质守门员、品味天花板<br>社交/恋爱：傲娇名媛(贵公子) / 精致浪漫型", celebs: "安妮·海瑟薇 (演艺)、梁朝伟 (演艺)、杨贵妃 (历史)" },
-            { stem: "壬水", tag: "The Ocean · 全局浪潮者", core: "席卷整个网络的巨大流量洪流与宏观算法；不受边界限制，善于驾驭海量数据与趋势。", aura: "气质洒脱大气，眼神深邃且灵动；自带一种见惯大风大浪的通透感与不羁。", inner: "<ul><li><strong>宏观演算：</strong>智慧通透，学习力强，永远站在全局视角看问题。</li><li><strong>动态适应：</strong>随机应变，豁达不拘小节，讨厌被规则死死绑住。</li><li><strong>冒险开拓：</strong>永远在追逐新的浪潮，偶尔显得喜新厌旧。</li></ul>", roles: "古代/现代职场：运筹帷幄的军师 / 风险投资人(VC)、Web3先行者<br>团队定位：宏观战略家、脑洞发动机<br>社交/恋爱：有趣的冒险家 / 自由流浪型", celebs: "理查德·布兰森 (商业)、高圆圆 (演艺)、诸葛亮 (历史)" },
-            { stem: "癸水", tag: "The Dew · 幽灵观察者", core: "悄无声息的隐形数据流，能够穿透任何防火墙，拥有系统内最强的情绪算力和直觉。", aura: "清冷干净，身形偏纤细；眼神清澈但极其内敛，给人一种安静、神秘且高级的感觉。", inner: "<ul><li><strong>情绪黑客：</strong>直觉力与敏感度惊人，能一眼看透人性和底层动机。</li><li><strong>柔性渗透：</strong>低调不张扬，外柔内刚，最擅长迂回包抄达成目的。</li><li><strong>深谋远虑：</strong>走一步算十步的幕后策略家。</li></ul>", roles: "古代/现代职场：幕后隐士 / 首席数据分析师、潜意识心理学家<br>团队定位：影子智囊团、信息处理中枢<br>社交/恋爱：终极树洞 / 温柔试探型", celebs: "刘亦菲 (演艺)、基努·里维斯 (演艺)、阿兰·图灵 (科技)" }
+            { stem: "甲木", tag: "The Oak · 创世架构师", core: "破土而出的第一行代码，自带向上生长的破局之力与绝对的系统主导权。", aura: "骨架舒展，身形挺拔；眼神坚定，走路带风。", inner: "<ul><li><strong>目标锁定：</strong>野心与担当并存，认准方向就不回头。</li><li><strong>直筒逻辑：</strong>正直坦荡，宁折不弯。</li><li><strong>抗压满格：</strong>压力越大，生长的势能越强。</li></ul>", roles: "现代职场：独角兽CEO、行业标准制定者<br>团队定位：决策引擎<br>社交：靠谱大哥(大姐)", celebs: "埃隆·马斯克, 刘涛" },
+            { stem: "乙木", tag: "The Vine · 生态连接者", core: "蜿蜒生长的柔性网络，极其敏锐的节点感知力，能将孤立的数据编织成生态系统。", aura: "线条流畅细腻，气质柔和温婉；自带高级文艺氛围场。", inner: "<ul><li><strong>高频共情：</strong>情绪读取能力满分，懂迁就。</li><li><strong>曲线救国：</strong>韧性极强，能屈能伸。</li><li><strong>审美天赋：</strong>艺术感与细节捕捉能力天生在线。</li></ul>", roles: "现代职场：社区生态总监、跨界公关<br>团队定位：超级粘合剂<br>社交：情绪价值提供机", celebs: "奥黛丽·赫本, 胡歌" },
+            { stem: "丙火", tag: "The Sun · 核心发光体", core: "系统中的恒星级能源，持续输出高燃热量，自带强大的辐射场与开源布道能力。", aura: "气色红润，笑容明亮；气场极致外放，聚光灯中心。", inner: "<ul><li><strong>高燃输出：</strong>外向开朗，真诚直接。</li><li><strong>情绪感染：</strong>极强的煽动性与带动感。</li><li><strong>慷慨开源：</strong>讲义气，乐于分享能量。</li></ul>", roles: "现代职场：头部主播、明星演讲者<br>团队定位：破冰先锋<br>社交：聚会灵魂", celebs: "莱昂纳多, 谢娜" },
+            { stem: "丁火", tag: "The Star · 灵感启明者", core: "黑夜中的高亮像素，数据盲区里的探照灯；能量不大但穿透力极强，专攻底层逻辑。", aura: "气质温柔有灵气，眼神深邃；自带柔光滤镜。", inner: "<ul><li><strong>深度洞察：</strong>情感细腻，看透事物直击灵魂。</li><li><strong>极致专注：</strong>有自己的小世界，执着持久。</li><li><strong>外柔内刚：</strong>底层有极其坚固的安全协议。</li></ul>", roles: "现代职场：AI提示词工程师、调查记者<br>团队定位：灵感火花塞<br>社交：温柔树洞", celebs: "泰勒·斯威夫特, 周杰伦" },
+            { stem: "戊土", tag: "The Mountain · 矩阵压舱石", core: "承载万亿参数的物理服务器集群，系统中最厚重、最可靠的防御与存储基石。", aura: "身形偏厚实稳重，面容端正；绝对信任感。", inner: "<ul><li><strong>绝对稳健：</strong>诚信务实，讨厌虚假数据。</li><li><strong>海量包容：</strong>宽容度极高，承载复杂情绪。</li><li><strong>长期主义：</strong>追求终极的安全感与稳定。</li></ul>", roles: "现代职场：基础设施架构师、合规高管<br>团队定位：定海神针<br>社交：最靠谱后盾", celebs: "沃伦·巴菲特, 董明珠" },
+            { stem: "己土", tag: "The Garden · 算法培育者", core: "拥有超级收纳能力与孵化环境的田园数据库；擅长整理冗杂信息，滋养初创项目。", aura: "温婉柔和，皮肤细腻；气质干净无压迫感。", inner: "<ul><li><strong>极致服务：</strong>细心体贴，照顾系统的微小进程。</li><li><strong>低调务实：</strong>不争抢算力，默默付出。</li><li><strong>高效整理：</strong>收纳整理、规划统筹能力一流。</li></ul>", roles: "现代职场：首席人力资源(CHRO)、用户运营<br>团队定位：后勤大总管<br>社交：贴心大管家", celebs: "凯特王妃, 黄磊" },
+            { stem: "庚金", tag: "The Sword · 破局终结者", core: "拥有最高执行权限的杀毒软件与改革指令；硬核、锋利，最擅长在混乱中重构秩序。", aura: "五官立体锋利，眼神犀利；气场冷冽高级。", inner: "<ul><li><strong>极简杀伐：</strong>果断直接，执行力拉满。</li><li><strong>非黑即白：</strong>极度讲求原则与逻辑，不讲人情。</li><li><strong>钢铁意志：</strong>抗压极强，不破不立。</li></ul>", roles: "现代职场：危机公关、重构工程师<br>团队定位：核心战斗力<br>社交：诤友、硬核派", celebs: "克里斯蒂亚诺·罗纳尔多, 那英" },
+            { stem: "辛金", tag: "The Jade · 像素级雕琢者", core: "经过千万次迭代打磨的顶级UI界面；对精度、品质和美感有着近乎代码般苛刻的要求。", aura: "精致优雅，自带清冷的贵气与距离感。", inner: "<ul><li><strong>完美主义：</strong>细节控晚期，对瑕疵零容忍。</li><li><strong>高阶审美：</strong>品味极佳，追求高级感。</li><li><strong>外冷内热：</strong>傲娇毒舌但极其注重个人尊严。</li></ul>", roles: "现代职场：奢侈品主理人、算法调优专家<br>团队定位：品质守门员<br>社交：傲娇名媛/贵公子", celebs: "安妮·海瑟薇, 梁朝伟" },
+            { stem: "壬水", tag: "The Ocean · 全局浪潮者", core: "席卷整个网络的巨大流量洪流与宏观算法；不受边界限制，善于驾驭海量数据与趋势。", aura: "气质洒脱大气，通透感与不羁。", inner: "<ul><li><strong>宏观演算：</strong>智慧通透，站在全局视角看问题。</li><li><strong>动态适应：</strong>随机应变，讨厌被规则绑住。</li><li><strong>冒险开拓：</strong>永远追逐新浪潮，偶尔喜新厌旧。</li></ul>", roles: "现代职场：风险投资人(VC)、Web3先行者<br>团队定位：宏观战略家<br>社交：自由冒险家", celebs: "理查德·布兰森, 高圆圆" },
+            { stem: "癸水", tag: "The Dew · 幽灵观察者", core: "悄无声息的隐形数据流，能够穿透任何防火墙，拥有系统内最强的情绪算力和直觉。", aura: "清冷干净，眼神清澈内敛，安静神秘。", inner: "<ul><li><strong>情绪黑客：</strong>直觉敏感，看透底层动机。</li><li><strong>柔性渗透：</strong>低调外柔内刚，擅长迂回达成目的。</li><li><strong>深谋远虑：</strong>走一步算十步的幕后策略家。</li></ul>", roles: "现代职场：潜意识心理学家、数据分析师<br>团队定位：影子智囊团<br>社交：终极树洞", celebs: "刘亦菲, 基努·里维斯" }
         ];
 
-        // 获取时辰名称(带早晚子时逻辑)
+        // 📊 全局变量：存储雷达图实例
+        let radarChartInstance = null;
+        function renderRadarChart(energyData) {
+            const ctx = document.getElementById('energyRadar').getContext('2d');
+            if (radarChartInstance) radarChartInstance.destroy();
+            radarChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['金 (Metal)', '水 (Water)', '木 (Wood)', '火 (Fire)', '土 (Earth)'],
+                    datasets: [{
+                        label: '能量占比 (%)', data: energyData,
+                        backgroundColor: 'rgba(217, 119, 6, 0.25)', borderColor: '#F59E0B', borderWidth: 2,
+                        pointBackgroundColor: '#0a0f1e', pointBorderColor: '#60A5FA', pointBorderWidth: 2, pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(147, 197, 253, 0.2)' }, grid: { color: 'rgba(147, 197, 253, 0.2)' },
+                            pointLabels: { color: '#FDE68A', font: { size: 12, family: '-apple-system, sans-serif' } },
+                            ticks: { display: false, min: 0, max: 50 }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // 获取时辰名称
         function getEarthBranchName(hour) {
             if (hour === 23) return '晚子时 (跨日计算)';
             if (hour === 0) return '早子时 (当日起算)';
@@ -346,68 +420,89 @@
             return '未知时辰';
         }
 
-        // 核心解析逻辑（植入真太阳时天文引擎）
+        // 核心解析逻辑（包含降级运算与真太阳时引擎）
         function startDataParsing() {
             try {
-                // 1. 获取基础输入
                 const y = parseInt(ys.value);
                 const m = parseInt(ms.value);
                 const d = parseInt(ds.value);
-                const h = parseInt(hs.value);
-                const min = parseInt(mins.value);
-                const lon = parseFloat(document.getElementById('birthPlace').value);
+                const hVal = hs.value;
+                const minVal = mins.value;
+                const lonVal = citySelect.value;
+                const provVal = provSelect.value;
                 
-                // 2. 均时差 (Equation of Time) 算法计算
-                const start = new Date(y, 0, 0);
-                const diff = (new Date(y, m - 1, d) - start) + ((start.getTimezoneOffset() - new Date(y, m - 1, d).getTimezoneOffset()) * 60 * 1000);
-                const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const B = 2 * Math.PI * (dayOfYear - 81) / 365;
-                const eot = 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B); // 得到偏差分钟数
+                let trueH, trueMin, totalOffset = 0;
+                let isDegradedMode = false;
+                let trueTargetDate;
                 
-                // 3. 经度差计算 (北京时间以 120°E 为准，地球自转1度相差4分钟)
-                const lonDiff = (lon - 120) * 4; 
-                
-                // 4. 计算总偏移量并得到 真太阳时 (True Solar Time)
-                const totalOffset = eot + lonDiff;
-                let trueTargetDate = new Date(y, m - 1, d, h, min);
-                trueTargetDate.setMinutes(trueTargetDate.getMinutes() + totalOffset);
-                
+                // 🌟 判断是否触发降级运算（缺乏时间或坐标）
+                if (hVal === 'unknown' || minVal === 'unknown' || provVal === "未知地点 (跳过)") {
+                    isDegradedMode = true;
+                    trueH = 12; // 默认正午
+                    trueMin = 0;
+                    trueTargetDate = new Date(y, m - 1, d, trueH, trueMin);
+                } else {
+                    const h = parseInt(hVal);
+                    const min = parseInt(minVal);
+                    const lon = parseFloat(lonVal);
+                    
+                    // 均时差 (EOT)
+                    const start = new Date(y, 0, 0);
+                    const diff = (new Date(y, m - 1, d) - start) + ((start.getTimezoneOffset() - new Date(y, m - 1, d).getTimezoneOffset()) * 60 * 1000);
+                    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const B = 2 * Math.PI * (dayOfYear - 81) / 365;
+                    const eot = 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
+                    
+                    // 经度差
+                    const lonDiff = (lon - 120) * 4; 
+                    
+                    totalOffset = eot + lonDiff;
+                    trueTargetDate = new Date(y, m - 1, d, h, min);
+                    trueTargetDate.setMinutes(trueTargetDate.getMinutes() + totalOffset);
+                    
+                    trueH = trueTargetDate.getHours();
+                    trueMin = trueTargetDate.getMinutes();
+                }
+
                 const trueY = trueTargetDate.getFullYear();
                 const trueM = trueTargetDate.getMonth() + 1;
                 const trueD = trueTargetDate.getDate();
-                const trueH = trueTargetDate.getHours();
-                const trueMin = trueTargetDate.getMinutes();
 
-                // 5. 核心：早晚子时与换日判定
-                // 创建一个用于计算日干支的干净 Date 对象
+                // 早晚子时与换日判定
                 let calcDate = new Date(trueY, trueTargetDate.getMonth(), trueD);
-                
-                // 🌟 物理跨越：如果是晚子时（23点），日历强行推至第二天！
                 if (trueH === 23) {
                     calcDate.setDate(calcDate.getDate() + 1); 
                 }
 
-                // 6. 算出属于哪一个天干地支原型 (基于基准日算法)
                 const utcCalc = Date.UTC(calcDate.getFullYear(), calcDate.getMonth(), calcDate.getDate());
-                const utcBase = Date.UTC(2024, 0, 1); // 2024-01-01 是甲子日
+                const utcBase = Date.UTC(2024, 0, 1); 
                 const diffDays = Math.floor((utcCalc - utcBase) / 86400000);
                 
                 let stemIndex = diffDays % 10; 
                 if (stemIndex < 0) stemIndex += 10; 
-                
                 const result = archetypes[stemIndex];
 
                 // 切换页面
                 document.getElementById('input-screen').style.display = 'none';
                 document.getElementById('result-screen').style.display = 'block';
 
-                // 渲染天文级校准提示
-                const offsetStr = totalOffset > 0 ? `+${totalOffset.toFixed(1)}` : totalOffset.toFixed(1);
-                const formatTime = `${trueY}-${trueM.toString().padStart(2,'0')}-${trueD.toString().padStart(2,'0')} ${trueH.toString().padStart(2,'0')}:${trueMin.toString().padStart(2,'0')}`;
-                document.getElementById('res-solar-time').innerHTML = 
-                    `天文真太阳时校准完成 (偏移量: ${offsetStr} 分钟)<br>
-                     物理时间落点：<span>${formatTime}</span><br>
-                     系统判定时辰：<span>${getEarthBranchName(trueH)}</span>`;
+                // 渲染天文级校准提示或降级警告
+                const solarBox = document.getElementById('res-solar-time');
+                if (isDegradedMode) {
+                    solarBox.style.border = "1px dashed rgba(245, 158, 11, 0.5)"; // 降级模式显示橙色边框
+                    solarBox.innerHTML = 
+                        `⚠️ 缺乏精确坐标/时辰，已启动标准降级推演<br>
+                         默认时间落点：<span>${trueY}-${trueM.toString().padStart(2,'0')}-${trueD.toString().padStart(2,'0')} 12:00</span><br>
+                         由于缺乏校准，结果可能存在微小折叠。`;
+                } else {
+                    solarBox.style.border = "1px dashed rgba(96, 165, 250, 0.4)"; // 正常模式恢复蓝色
+                    const offsetStr = totalOffset > 0 ? `+${totalOffset.toFixed(1)}` : totalOffset.toFixed(1);
+                    const formatTime = `${trueY}-${trueM.toString().padStart(2,'0')}-${trueD.toString().padStart(2,'0')} ${trueH.toString().padStart(2,'0')}:${trueMin.toString().padStart(2,'0')}`;
+                    solarBox.innerHTML = 
+                        `✅ 天文真太阳时校准完成 (偏移量: ${offsetStr} 分钟)<br>
+                         物理时间落点：<span>${formatTime}</span><br>
+                         系统判定时辰：<span>${getEarthBranchName(trueH)}</span>`;
+                }
 
                 // 注入 UI 面板数据
                 document.getElementById('res-name').innerText = result.stem;
@@ -416,7 +511,9 @@
                 document.getElementById('res-aura').innerText = result.aura;
                 document.getElementById('res-inner').innerHTML = result.inner;
                 document.getElementById('res-roles').innerHTML = result.roles;
-                document.getElementById('res-celebs').innerText = result.celebs;
+
+                // ⚡ 绘制五行雷达图 (伪装数据待替换)
+                renderRadarChart([25, 15, 40, 10, 10]);
 
                 // 注入海报模板数据
                 document.getElementById('post-name').innerText = result.stem;
@@ -426,10 +523,9 @@
                 document.getElementById('post-inner').innerHTML = result.inner;
                 document.getElementById('post-roles').innerHTML = result.roles;
                 
-                // 回顶部
                 document.getElementById('mainContainer').scrollTop = 0;
             } catch (error) {
-                console.error("解析过程中出现错误：", error);
+                console.error("解析错误：", error);
                 alert("由于数据读取错误，未能成功解析。请刷新页面重试。");
             }
         }
@@ -440,17 +536,13 @@
             document.getElementById('mainContainer').scrollTop = 0;
         }
 
-        // 📸 核心功能：生成海报图片
         async function generatePoster() {
+            if (typeof gtag === 'function') {
+                gtag('event', 'generate_poster_click', { 'event_category': 'engagement', 'event_label': 'cyber_bazi_poster' });
+            }
             document.getElementById('loading-overlay').style.display='flex'; 
-            const template = document.getElementById('poster-template');
-            
             try {
-                const canvas = await html2canvas(template, {
-                    useCORS: true,
-                    scale: 3, 
-                    backgroundColor: '#0a0f1e' // 封死底层颜色直透
-                });
+                const canvas = await html2canvas(document.getElementById('poster-template'), { useCORS: true, scale: 3, backgroundColor: '#0a0f1e' });
                 document.getElementById('poster-img').src = canvas.toDataURL("image/png");
                 document.getElementById('poster-overlay').style.display = 'flex';
             } catch (e) {
