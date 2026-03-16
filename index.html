@@ -21,6 +21,7 @@
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lunar-javascript/lunar.js"></script>
 
     <style>
         /* --- 基础样式 (全局毛玻璃包裹) --- */
@@ -104,9 +105,10 @@
         .solar-time-box {
             background: rgba(37, 99, 235, 0.15); border: 1px dashed rgba(96, 165, 250, 0.4);
             border-radius: 8px; padding: 8px; margin-bottom: 20px; text-align: center;
-            font-size: 12px; color: #93C5FD; letter-spacing: 1px;
+            font-size: 12px; color: #93C5FD; letter-spacing: 1px; line-height: 1.6;
         }
         .solar-time-box span { color: #FDE68A; font-weight: bold; font-size: 14px;}
+        .bazi-display { color: #F59E0B; font-size: 16px; font-weight: 900; letter-spacing: 4px; margin-top: 5px; border-top: 1px solid rgba(147, 197, 253, 0.2); padding-top: 5px;}
 
         .data-card { background: rgba(15, 23, 42, 0.6); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid rgba(37, 99, 235, 0.3); box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5); }
         .card-title { color: #F59E0B; font-size: 15px; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;}
@@ -304,7 +306,6 @@
         for (let i = 1; i <= 12; i++) { ms.add(new Option(i + '月', i)); }
         for (let i = 1; i <= 31; i++) { ds.add(new Option(i + '日', i)); }
         
-        // 设置默认选填的空值占位符
         hs.add(new Option('请选择时辰', 'unknown'));
         mins.add(new Option('请选择分钟', 'unknown'));
         
@@ -377,32 +378,16 @@
         const provSelect = document.getElementById('prov');
         const citySelect = document.getElementById('city');
 
-        // 填充省份/国家
-        for (let p in geoData) {
-            provSelect.add(new Option(p, p));
-        }
-
-        // 更新城市/区县逻辑
+        for (let p in geoData) { provSelect.add(new Option(p, p)); }
         function updateCity() {
             const p = provSelect.value;
-            citySelect.innerHTML = ''; // 清空
-            for (let c in geoData[p]) {
-                citySelect.add(new Option(c, geoData[p][c]));
-            }
+            citySelect.innerHTML = '';
+            for (let c in geoData[p]) { citySelect.add(new Option(c, geoData[p][c])); }
         }
-        
-        // 初始加载默认占位空值
         provSelect.value = "请选择省份/国家";
         updateCity();
 
-        // 初始化二维码
-        try {
-            new QRCode(document.getElementById("qrcode"), { 
-                text: "https://www.mia-xuanxue.fun", width: 75, height: 75, colorDark : "#000000", colorLight : "#ffffff" 
-            });
-        } catch (e) { console.error("二维码生成:", e); }
-
-         // 数据字典：纯正赛博科技玄学版，内核算法已彻底剔除 MBTI
+        // 数据字典：纯正赛博科技玄学版，内核算法已彻底剔除 MBTI
         const archetypes = [
             { stem: "甲木", tag: "The Oak · 创世架构师", core: "破土而出的第一行代码，自带向上生长的破局之力与绝对的系统主导权。", aura: "骨架舒展，身形挺拔；眼神坚定，走路带风。出场自带“主角光环”与正气感。", inner: "<ul><li><strong>目标锁定：</strong>野心与担当并存，认准方向就不回头。</li><li><strong>直筒逻辑：</strong>正直坦荡，宁折不弯，拒绝无效的弯弯绕绕。</li><li><strong>抗压满格：</strong>压力越大，生长的势能越强。</li></ul>", roles: "古代/现代职场：开国君主 / 独角兽CEO、行业标准制定者<br>团队定位：决策引擎、方向指引者<br>社交/恋爱：靠谱大哥(大姐) / 强势守护型", celebs: "埃隆·马斯克 (科技)、刘涛 (演艺)、岳飞 (历史)" },
             { stem: "乙木", tag: "The Vine · 生态连接者", core: "蜿蜒生长的柔性网络，极其敏锐的节点感知力，能将孤立的数据编织成生态系统。", aura: "线条流畅细腻，气质柔和温婉；穿搭品味极佳，自带高级的文艺氛围场。", inner: "<ul><li><strong>高频共情：</strong>情绪读取能力满分，懂迁就、会照顾人。</li><li><strong>曲线救国：</strong>韧性极强，能屈能伸，用柔软的身段解决硬冲突。</li><li><strong>审美天赋：</strong>艺术感与细节捕捉能力天生在线。</li></ul>", roles: "古代/现代职场：才女谋士 / 社区生态总监、跨界公关<br>团队定位：超级粘合剂、创意氛围组<br>社交/恋爱：暖心知己 / 情绪价值提供机", celebs: "奥黛丽·赫本 (演艺)、胡歌 (演艺)、林徽因 (文化)" },
@@ -416,6 +401,18 @@
             { stem: "癸水", tag: "The Dew · 幽灵观察者", core: "悄无声息的隐形数据流，能够穿透任何防火墙，拥有系统内最强的情绪算力和直觉。", aura: "清冷干净，身形偏纤细；眼神清澈但极其内敛，给人一种安静、神秘且高级的感觉。", inner: "<ul><li><strong>情绪黑客：</strong>直觉力与敏感度惊人，能一眼看透人性和底层动机。</li><li><strong>柔性渗透：</strong>低调不张扬，外柔内刚，最擅长迂回包抄达成目的。</li><li><strong>深谋远虑：</strong>走一步算十步的幕后策略家。</li></ul>", roles: "古代/现代职场：幕后隐士 / 首席数据分析师、潜意识心理学家<br>团队定位：影子智囊团、信息处理中枢<br>社交/恋爱：终极树洞 / 温柔试探型", celebs: "刘亦菲 (演艺)、基努·里维斯 (演艺)、阿兰·图灵 (科技)" }
         ];
 
+        // 🌟 五行能量 100 分制算法字典模型
+        const stemElements = { '甲':'木', '乙':'木', '丙':'火', '丁':'火', '戊':'土', '己':'土', '庚':'金', '辛':'金', '壬':'水', '癸':'水' };
+        const branchHidden = {
+            '子': {'水': 1}, '卯': {'木': 1}, '酉': {'金': 1},
+            '亥': {'水': 0.7, '木': 0.3}, '午': {'火': 0.7, '土': 0.3},
+            '寅': {'木': 0.6, '火': 0.3, '土': 0.1}, '申': {'金': 0.6, '水': 0.3, '土': 0.1},
+            '巳': {'火': 0.6, '土': 0.3, '金': 0.1}, '辰': {'土': 0.6, '木': 0.3, '水': 0.1},
+            '戌': {'土': 0.6, '金': 0.3, '火': 0.1}, '丑': {'土': 0.6, '水': 0.3, '金': 0.1},
+            '未': {'土': 0.6, '火': 0.3, '木': 0.1}
+        };
+        const stemWeights = [8, 12, 5, 8]; // 年干，月干，日干，时干
+        const branchWeights = [10, 30, 15, 12]; // 年支，月支，日支，时支
 
         // 📊 全局变量：存储雷达图实例
         let radarChartInstance = null;
@@ -446,58 +443,38 @@
             });
         }
 
-        // 获取时辰名称
         function getEarthBranchName(hour) {
-            if (hour === 23) return '晚子时 (跨日计算)';
-            if (hour === 0) return '早子时 (当日起算)';
-            if (hour === 1 || hour === 2) return '丑时';
-            if (hour === 3 || hour === 4) return '寅时';
-            if (hour === 5 || hour === 6) return '卯时';
-            if (hour === 7 || hour === 8) return '辰时';
-            if (hour === 9 || hour === 10) return '巳时';
-            if (hour === 11 || hour === 12) return '午时';
-            if (hour === 13 || hour === 14) return '未时';
-            if (hour === 15 || hour === 16) return '申时';
-            if (hour === 17 || hour === 18) return '酉时';
-            if (hour === 19 || hour === 20) return '戌时';
-            if (hour === 21 || hour === 22) return '亥时';
-            return '未知时辰';
+            if (hour === 23) return '晚子时'; if (hour === 0) return '早子时';
+            if (hour === 1 || hour === 2) return '丑时'; if (hour === 3 || hour === 4) return '寅时';
+            if (hour === 5 || hour === 6) return '卯时'; if (hour === 7 || hour === 8) return '辰时';
+            if (hour === 9 || hour === 10) return '巳时'; if (hour === 11 || hour === 12) return '午时';
+            if (hour === 13 || hour === 14) return '未时'; if (hour === 15 || hour === 16) return '申时';
+            if (hour === 17 || hour === 18) return '酉时'; if (hour === 19 || hour === 20) return '戌时';
+            if (hour === 21 || hour === 22) return '亥时'; return '未知时辰';
         }
 
-        // 核心解析逻辑（包含降级运算与真太阳时引擎）
+        // 核心解析逻辑（包含降级运算、真太阳时与五行矩阵引擎）
         function startDataParsing() {
             try {
-                const y = parseInt(ys.value);
-                const m = parseInt(ms.value);
-                const d = parseInt(ds.value);
-                const hVal = hs.value;
-                const minVal = mins.value;
-                const lonVal = citySelect.value;
-                const provVal = provSelect.value;
+                const y = parseInt(ys.value); const m = parseInt(ms.value); const d = parseInt(ds.value);
+                const hVal = hs.value; const minVal = mins.value;
+                const lonVal = citySelect.value; const provVal = provSelect.value;
                 
                 let trueH, trueMin, totalOffset = 0;
                 let isDegradedMode = false;
                 let trueTargetDate;
                 
-                // 🌟 判断是否触发降级运算（任意选填项为空）
                 if (hVal === 'unknown' || minVal === 'unknown' || provVal === "请选择省份/国家" || lonVal === "unknown") {
                     isDegradedMode = true;
-                    trueH = 12; // 默认正午
-                    trueMin = 0;
+                    trueH = 12; trueMin = 0;
                     trueTargetDate = new Date(y, m - 1, d, trueH, trueMin);
                 } else {
-                    const h = parseInt(hVal);
-                    const min = parseInt(minVal);
-                    const lon = parseFloat(lonVal);
-                    
-                    // 均时差 (EOT)
+                    const h = parseInt(hVal); const min = parseInt(minVal); const lon = parseFloat(lonVal);
                     const start = new Date(y, 0, 0);
                     const diff = (new Date(y, m - 1, d) - start) + ((start.getTimezoneOffset() - new Date(y, m - 1, d).getTimezoneOffset()) * 60 * 1000);
                     const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
                     const B = 2 * Math.PI * (dayOfYear - 81) / 365;
                     const eot = 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
-                    
-                    // 经度差
                     const lonDiff = (lon - 120) * 4; 
                     
                     totalOffset = eot + lonDiff;
@@ -508,60 +485,60 @@
                     trueMin = trueTargetDate.getMinutes();
                 }
 
-                const trueY = trueTargetDate.getFullYear();
-                const trueM = trueTargetDate.getMonth() + 1;
-                const trueD = trueTargetDate.getDate();
+                const trueY = trueTargetDate.getFullYear(); const trueM = trueTargetDate.getMonth() + 1; const trueD = trueTargetDate.getDate();
 
-                // 早晚子时与换日判定
-                let calcDate = new Date(trueY, trueTargetDate.getMonth(), trueD);
-                if (trueH === 23) {
-                    calcDate.setDate(calcDate.getDate() + 1); 
-                }
-
-                const utcCalc = Date.UTC(calcDate.getFullYear(), calcDate.getMonth(), calcDate.getDate());
-                const utcBase = Date.UTC(2024, 0, 1); 
-                const diffDays = Math.floor((utcCalc - utcBase) / 86400000);
+                // 🌟 使用 lunar-javascript 提取精确八字 (原生支持23点晚子时物理跨越)
+                const lunarDate = Lunar.fromDate(trueTargetDate);
+                const bazi = lunarDate.getEightChar();
                 
-                let stemIndex = diffDays % 10; 
-                if (stemIndex < 0) stemIndex += 10; 
-                const result = archetypes[stemIndex];
+                const stems = [bazi.getYearGan(), bazi.getMonthGan(), bazi.getDayGan(), bazi.getTimeGan()];
+                const branches = [bazi.getYearZhi(), bazi.getMonthZhi(), bazi.getDayZhi(), bazi.getTimeZhi()];
+                
+                // 提取日干作为核心能量原型
+                const stemArchetypeMap = { "甲": 0, "乙": 1, "丙": 2, "丁": 3, "戊": 4, "己": 5, "庚": 6, "辛": 7, "壬": 8, "癸": 9 };
+                const result = archetypes[stemArchetypeMap[stems[2]]];
 
-                // 切换页面
+                // 🌟 引擎发力：计算五行 100 分制
+                let scores = { '金': 0, '水': 0, '木': 0, '火': 0, '土': 0 };
+                for(let i=0; i<4; i++) {
+                    scores[stemElements[stems[i]]] += stemWeights[i];
+                    let hidden = branchHidden[branches[i]];
+                    for(let e in hidden) {
+                        scores[e] += branchWeights[i] * hidden[e];
+                    }
+                }
+                // 图表所需的数组顺序：金, 水, 木, 火, 土
+                const energyData = [scores['金'], scores['水'], scores['木'], scores['火'], scores['土']];
+
+                // 切换页面并注入数据
                 document.getElementById('input-screen').style.display = 'none';
                 document.getElementById('result-screen').style.display = 'block';
 
-                // 渲染天文级校准提示或降级警告
                 const solarBox = document.getElementById('res-solar-time');
+                const baziStrHTML = `<div class="bazi-display">${stems[0]}${branches[0]} · ${stems[1]}${branches[1]} · ${stems[2]}${branches[2]} · ${stems[3]}${branches[3]}</div>`;
+
                 if (isDegradedMode) {
-                    solarBox.style.border = "1px dashed rgba(245, 158, 11, 0.5)"; // 降级模式显示橙色边框
-                    solarBox.innerHTML = 
-                        `⚠️ 缺乏精确坐标/时辰，已启动标准降级推演<br>
-                         默认时间落点：<span>${trueY}-${trueM.toString().padStart(2,'0')}-${trueD.toString().padStart(2,'0')} 12:00</span><br>
-                         由于缺乏校准，结果可能存在微小折叠。`;
+                    solarBox.style.border = "1px dashed rgba(245, 158, 11, 0.5)";
+                    solarBox.innerHTML = `⚠️ 缺乏精确坐标/时辰，已启动标准降级推演<br>默认时间落点：<span>${trueY}-${trueM.toString().padStart(2,'0')}-${trueD.toString().padStart(2,'0')} 12:00</span><br>由于缺乏校准，结果可能存在微小折叠。${baziStrHTML}`;
                 } else {
-                    solarBox.style.border = "1px dashed rgba(96, 165, 250, 0.4)"; // 正常模式恢复蓝色
+                    solarBox.style.border = "1px dashed rgba(96, 165, 250, 0.4)";
                     const offsetStr = totalOffset > 0 ? `+${totalOffset.toFixed(1)}` : totalOffset.toFixed(1);
                     const formatTime = `${trueY}-${trueM.toString().padStart(2,'0')}-${trueD.toString().padStart(2,'0')} ${trueH.toString().padStart(2,'0')}:${trueMin.toString().padStart(2,'0')}`;
-                    solarBox.innerHTML = 
-                        `✅ 天文真太阳时校准完成 (偏移量: ${offsetStr} 分钟)<br>
-                         物理时间落点：<span>${formatTime}</span><br>
-                         系统判定时辰：<span>${getEarthBranchName(trueH)}</span>`;
+                    solarBox.innerHTML = `✅ 天文真太阳时校准完成 (偏移量: ${offsetStr} 分钟)<br>物理时间落点：<span>${formatTime}</span><br>系统判定时辰：<span>${getEarthBranchName(trueH)}</span>${baziStrHTML}`;
                 }
 
-                // 注入 UI 面板数据
                 document.getElementById('res-name').innerText = result.stem;
                 document.getElementById('res-tag').innerText = result.tag;
                 document.getElementById('res-core').innerText = result.core;
                 document.getElementById('res-aura').innerText = result.aura;
                 document.getElementById('res-inner').innerHTML = result.inner;
                 document.getElementById('res-roles').innerHTML = result.roles;
-                // 🌟 修复：补回名人共振卡片的渲染逻辑
                 document.getElementById('res-celebs').innerText = result.celebs;
 
-                // ⚡ 绘制五行雷达图 (伪装数据待替换)
-                renderRadarChart([25, 15, 40, 10, 10]);
+                // ⚡ 绘制真实五行雷达图
+                renderRadarChart(energyData);
 
-                // 注入海报模板数据
+                // 注入海报模板
                 document.getElementById('post-name').innerText = result.stem;
                 document.getElementById('post-tag').innerText = result.tag;
                 document.getElementById('post-core').innerText = result.core;
@@ -583,16 +560,13 @@
         }
 
         async function generatePoster() {
-            if (typeof gtag === 'function') {
-                gtag('event', 'generate_poster_click', { 'event_category': 'engagement', 'event_label': 'cyber_bazi_poster' });
-            }
+            if (typeof gtag === 'function') { gtag('event', 'generate_poster_click', { 'event_category': 'engagement', 'event_label': 'cyber_bazi_poster' }); }
             document.getElementById('loading-overlay').style.display='flex'; 
             try {
                 const canvas = await html2canvas(document.getElementById('poster-template'), { useCORS: true, scale: 3, backgroundColor: '#0a0f1e' });
                 document.getElementById('poster-img').src = canvas.toDataURL("image/png");
                 document.getElementById('poster-overlay').style.display = 'flex';
             } catch (e) {
-                console.error("海报生成错误:", e);
                 alert("渲染海报失败，请刷新页面重试。");
             }
             document.getElementById('loading-overlay').style.display='none';
