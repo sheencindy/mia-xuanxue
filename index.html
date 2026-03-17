@@ -268,21 +268,27 @@
                 <div class="card-title">⚙️ 内核算法 (Inner Logic)</div>
                 <div class="card-content" id="res-inner">加载中...</div>
             </div>
+            
             <div class="data-card">
                 <div class="card-title">🎭 多元宇宙角色 (Multiverse Roles)</div>
                 <div class="card-content" id="res-roles">加载中...</div>
             </div>
-            
+
             <div class="data-card">
+                <div class="card-title">🌟 能量共振样本 (Resonance)</div>
+                <div class="card-content" id="res-celebs">加载中...</div>
+            </div>
+
+            <div class="data-card" style="text-align: center; padding: 15px;">
+                <div style="color:#93C5FD; font-size:12px; margin-bottom:5px; letter-spacing:1px;">—— 完整底层八字 ——</div>
+                <div class="bazi-display" id="res-bazi" style="border-top: none; margin-top: 0; padding-top: 0; font-size: 20px;">加载中...</div>
+            </div>
+            
+            <div class="data-card" style="margin-bottom: 25px;">
                 <div class="card-title">📊 能量矩阵分布 (Energy Matrix)</div>
                 <div style="position: relative; height:250px; width:100%; display: flex; justify-content: center;">
                     <canvas id="energyRadar"></canvas>
                 </div>
-            </div>
-
-            <div class="data-card" style="margin-bottom: 25px;">
-                <div class="card-title">🌟 能量共振样本 (Resonance)</div>
-                <div class="card-content" id="res-celebs">加载中...</div>
             </div>
 
             <div class="action-buttons">
@@ -530,17 +536,19 @@
                 document.getElementById('result-screen').style.display = 'block';
 
                 const solarBox = document.getElementById('res-solar-time');
-                const baziStrHTML = `<div class="bazi-display">${stems[0]}${branches[0]} · ${stems[1]}${branches[1]} · ${stems[2]}${branches[2]} · ${stems[3]}${branches[3]}</div>`;
 
                 if (isDegradedMode) {
                     solarBox.style.border = "1px dashed rgba(245, 158, 11, 0.5)";
-                    solarBox.innerHTML = `⚠️ 缺乏精确坐标/时辰，已启动标准降级推演<br>默认时间落点：<span>${trueY}-${trueM.toString().padStart(2,'0')}-${trueD.toString().padStart(2,'0')} 12:00</span><br>由于缺乏校准，结果可能存在微小折叠。${baziStrHTML}`;
+                    solarBox.innerHTML = `⚠️ 缺乏精确坐标/时辰，已启动标准降级推演<br>默认时间落点：<span>${trueY}-${trueM.toString().padStart(2,'0')}-${trueD.toString().padStart(2,'0')} 12:00</span><br>由于缺乏校准，结果可能存在微小折叠。`;
                 } else {
                     solarBox.style.border = "1px dashed rgba(96, 165, 250, 0.4)";
                     const offsetStr = totalOffset > 0 ? `+${totalOffset.toFixed(1)}` : totalOffset.toFixed(1);
                     const formatTime = `${trueY}-${trueM.toString().padStart(2,'0')}-${trueD.toString().padStart(2,'0')} ${trueH.toString().padStart(2,'0')}:${trueMin.toString().padStart(2,'0')}`;
-                    solarBox.innerHTML = `✅ 天文真太阳时校准完成 (偏移量: ${offsetStr} 分钟)<br>物理时间落点：<span>${formatTime}</span><br>系统判定时辰：<span>${getEarthBranchName(trueH)}</span>${baziStrHTML}`;
+                    solarBox.innerHTML = `✅ 天文真太阳时校准完成 (偏移量: ${offsetStr} 分钟)<br>物理时间落点：<span>${formatTime}</span><br>系统判定时辰：<span>${getEarthBranchName(trueH)}</span>`;
                 }
+
+                // 🌟 注入单独的完整八字架构显示
+                document.getElementById('res-bazi').innerText = `${stems[0]}${branches[0]} · ${stems[1]}${branches[1]} · ${stems[2]}${branches[2]} · ${stems[3]}${branches[3]}`;
 
                 document.getElementById('res-name').innerText = result.stem;
                 document.getElementById('res-tag').innerText = result.tag;
