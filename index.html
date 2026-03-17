@@ -157,7 +157,7 @@
         .poster-section-content strong { color: #FCD34D; }
 
         .poster-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 30px; border-top: 1px solid rgba(217,119,6,0.3); padding-top: 20px; }
-        .qr-code { width: 75px; height: 75px; background: white; padding: 5px; border-radius: 5px; }
+        .qr-code { width: 75px; height: 75px; background: white; padding: 5px; border-radius: 5px; display: flex; justify-content: center; align-items: center; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -391,6 +391,16 @@
         }
         provSelect.value = "请选择省份/国家";
         updateCity();
+
+        // 🌟 新增修复：初始化二维码，直接将链接编译注入到准备好的容器中
+        new QRCode(document.getElementById("qrcode"), {
+            text: "https://www.mia-xuanxue.fun/",
+            width: 65, 
+            height: 65,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.L
+        });
 
         // 数据字典：纯正赛博科技玄学版，内核算法已彻底剔除 MBTI
         const archetypes = [
