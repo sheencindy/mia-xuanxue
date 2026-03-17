@@ -101,7 +101,7 @@
         .res-title { color: #D97706; font-size: 36px; font-weight: 900; margin: 0; text-shadow: 0 0 15px rgba(217, 119, 6, 0.6); }
         .res-tag { color: #FCD34D; font-size: 18px; margin-top: 5px; font-weight: bold; letter-spacing: 1px;}
         
-        /* 天文校准展示条 */
+        /* 天文校准展示条容器 */
         .solar-time-box {
             background: rgba(37, 99, 235, 0.15); border: 1px dashed rgba(96, 165, 250, 0.4);
             border-radius: 8px; padding: 8px; margin-bottom: 20px; text-align: center;
@@ -251,10 +251,6 @@
                 <div class="res-title" id="res-name">-</div>
                 <div class="res-tag" id="res-tag">-</div>
             </div>
-            
-            <div class="solar-time-box" id="res-solar-time">
-                加载中...
-            </div>
 
             <div class="data-card">
                 <div class="card-title">💻 底层代码 (Core Code)</div>
@@ -280,8 +276,11 @@
             </div>
 
             <div class="data-card" style="text-align: center; padding: 15px;">
-                <div style="color:#93C5FD; font-size:12px; margin-bottom:5px; letter-spacing:1px;">—— 完整底层八字 ——</div>
-                <div class="bazi-display" id="res-bazi" style="border-top: none; margin-top: 0; padding-top: 0; font-size: 20px;">加载中...</div>
+                <div class="solar-time-box" id="res-solar-time-container" style="margin-bottom: 0; padding: 15px 10px;">
+                    <div id="res-solar-time" style="margin-bottom: 12px;">加载中...</div>
+                    <div style="border-top: 1px solid rgba(147, 197, 253, 0.2); margin: 0 10px 12px 10px;"></div>
+                    <div class="bazi-display" id="res-bazi" style="border: none; margin: 0; padding: 0; font-size: 20px;">加载中...</div>
+                </div>
             </div>
             
             <div class="data-card" style="margin-bottom: 25px;">
@@ -450,7 +449,7 @@
         }
 
         function getEarthBranchName(hour) {
-            if (hour === 23) return '晚子时'; if (hour === 0) return '早子时';
+            if (hour === 23) return '晚子时 (跨日计算)'; if (hour === 0) return '早子时 (当日起算)';
             if (hour === 1 || hour === 2) return '丑时'; if (hour === 3 || hour === 4) return '寅时';
             if (hour === 5 || hour === 6) return '卯时'; if (hour === 7 || hour === 8) return '辰时';
             if (hour === 9 || hour === 10) return '巳时'; if (hour === 11 || hour === 12) return '午时';
@@ -535,16 +534,17 @@
                 document.getElementById('input-screen').style.display = 'none';
                 document.getElementById('result-screen').style.display = 'block';
 
+                const solarBoxContainer = document.getElementById('res-solar-time-container');
                 const solarBox = document.getElementById('res-solar-time');
 
                 if (isDegradedMode) {
-                    solarBox.style.border = "1px dashed rgba(245, 158, 11, 0.5)";
-                    solarBox.innerHTML = `⚠️ 缺乏精确坐标/时辰，已启动标准降级推演<br>默认时间落点：<span>${trueY}-${trueM.toString().padStart(2,'0')}-${trueD.toString().padStart(2,'0')} 12:00</span><br>由于缺乏校准，结果可能存在微小折叠。`;
+                    solarBoxContainer.style.border = "1px dashed rgba(245, 158, 11, 0.5)";
+                    solarBox.innerHTML = `⚠️ 缺乏精确坐标/时辰，已启动标准降级推演<br>默认时间落点：<span style="color: #FDE68A; font-weight: bold; font-size: 14px;">${trueY}-${trueM.toString().padStart(2,'0')}-${trueD.toString().padStart(2,'0')} 12:00</span><br>由于缺乏校准，结果可能存在微小折叠。`;
                 } else {
-                    solarBox.style.border = "1px dashed rgba(96, 165, 250, 0.4)";
+                    solarBoxContainer.style.border = "1px dashed rgba(96, 165, 250, 0.4)";
                     const offsetStr = totalOffset > 0 ? `+${totalOffset.toFixed(1)}` : totalOffset.toFixed(1);
                     const formatTime = `${trueY}-${trueM.toString().padStart(2,'0')}-${trueD.toString().padStart(2,'0')} ${trueH.toString().padStart(2,'0')}:${trueMin.toString().padStart(2,'0')}`;
-                    solarBox.innerHTML = `✅ 天文真太阳时校准完成 (偏移量: ${offsetStr} 分钟)<br>物理时间落点：<span>${formatTime}</span><br>系统判定时辰：<span>${getEarthBranchName(trueH)}</span>`;
+                    solarBox.innerHTML = `✅ 天文真太阳时校准完成 (偏移量: ${offsetStr} 分钟)<br>物理时间落点：<span style="color: #FDE68A; font-weight: bold; font-size: 14px;">${formatTime}</span><br>系统判定时辰：<span style="color: #FDE68A; font-weight: bold; font-size: 14px;">${getEarthBranchName(trueH)}</span>`;
                 }
 
                 // 🌟 注入单独的完整八字架构显示
